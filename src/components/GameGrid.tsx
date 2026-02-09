@@ -1,0 +1,74 @@
+"use client";
+
+import type { LetterStatus } from "@/lib/game";
+
+type Props = {
+  wordLength: number;
+  maxAttempts: number;
+  attempts: string[];
+  evaluations: LetterStatus[][];
+  currentGuess: string;
+  currentRow: number;
+  animatingRow: number | null;
+};
+
+export function GameGrid({
+  wordLength,
+  maxAttempts,
+  attempts,
+  evaluations,
+  currentGuess,
+  currentRow,
+  animatingRow,
+}: Props) {
+  const rows = maxAttempts;
+  const cols = wordLength;
+
+  return (
+    <div className="flex flex-col gap-1.5 mx-auto w-full max-w-md">
+      {Array.from({ length: rows }).map((_, rowIndex) => (
+        <div
+          key={rowIndex}
+          className="flex justify-center gap-1.5"
+          style={{ perspective: "1000px" }}
+        >
+          {Array.from({ length: cols }).map((_, colIndex) => {
+            const isFilled = rowIndex < attempts.length || (rowIndex === currentRow && currentGuess.length > colIndex);
+            const letter =
+              rowIndex < attempts.length
+                ? attempts[rowIndex][colIndex]
+                : rowIndex === currentRow
+                  ? currentGuess[colIndex]
+                  : "";
+            const status: LetterStatus | null =
+              rowIndex < evaluations.length ? evaluations[rowIndex][colIndex] ?? null : null;
+            const isAnimating = animatingRow === rowIndex;
+
+            return (
+              <div
+                key={colIndex}
+                className={`
+                  flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 text-2xl font-bold uppercase
+                  border-2 rounded
+                  transition-all duration-150
+                  ${isAnimating && status ? "animate-flip-in" : ""}
+                  ${
+                    status === "correct"
+                      ? "tile-correct text-white border-[#538d4e]"
+                      : status === "present"
+                        ? "tile-present text-white border-[#b59f3b]"
+                        : status === "absent"
+                          ? "tile-absent text-white border-[#3a3a3c]"
+                          : "bg-[#121213] border-[#3a3a3c] text-white"
+                  }
+                `}
+              >
+                {letter}
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
