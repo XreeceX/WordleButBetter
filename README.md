@@ -6,6 +6,8 @@ A production-ready Wordle-style word guessing game with 5–7 letter words, buil
 
 - **Random word per level** (5–7 letters) from the database, never repeated for that user once solved
 - **Wordle-style rules**: 6 attempts, green/yellow/gray feedback, duplicate-letter rules
+- **Broader dictionary**: Guesses can be validated with a free LLM (Groq/Llama) when not in the seed list (e.g. “locate”); results are cached
+- **Staggered tile flip** and row shake animations on submit
 - **On-screen + physical keyboard** with dynamic key states (green overrides yellow/gray; gray disabled)
 - **Auth**: Email/password and Google OAuth via NextAuth.js
 - **User stats**: Games played, words solved, current and max streak
@@ -37,6 +39,7 @@ Copy `.env.example` to `.env` and set:
 - **`AUTH_SECRET`** – NextAuth secret, e.g. `openssl rand -base64 32`
 - **`NEXTAUTH_URL`** – App URL (`http://localhost:3000` locally; production URL on Vercel)
 - **`AUTH_GOOGLE_ID`** / **`AUTH_GOOGLE_SECRET`** – Optional; omit for email-only auth
+- **`GROQ_API_KEY`** – Optional; if set, guesses not in the word list are checked with Groq’s free Llama model and cached so more words are accepted (get a free key at [console.groq.com](https://console.groq.com))
 
 ### 3. Database
 
@@ -79,6 +82,7 @@ Open [http://localhost:3000](http://localhost:3000). Sign up or log in, then pla
 
 - **user**, **account**, **session**, **verification_token** – NextAuth (Drizzle adapter)
 - **words** – Dictionary words (5–7 letters)
+- **valid_guesses** – LLM-approved guess words (cache so we don’t call the API repeatedly)
 - **user_word_progress** – Per-user solved/attempted words
 - **user_stats** – Games played, words solved, streaks
 - **game_sessions** – Active game (word reference, attempts, guess/evaluation history)

@@ -30,6 +30,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
   const [message, setMessage] = useState<string | null>(null);
   const [revealedWord, setRevealedWord] = useState<string | null>(null);
   const [animatingRow, setAnimatingRow] = useState<number | null>(null);
+  const [shakeRow, setShakeRow] = useState<number | null>(null);
   const [hasMoreWords, setHasMoreWords] = useState(initialHasMore);
 
   const currentRow = attempts.length;
@@ -46,6 +47,8 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
         submitGuess(sessionId, currentGuess).then((result) => {
           if (!result.ok) {
             setMessage(result.error);
+            setShakeRow(currentRow);
+            setTimeout(() => setShakeRow(null), 400);
             return;
           }
           setAnimatingRow(currentRow);
@@ -53,7 +56,9 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
           setEvaluations((p) => [...p, result.evaluation]);
           setCurrentGuess("");
           setState(result.state);
-          setAnimatingRow(null);
+          // Clear animating state after stagger + flip duration (~900ms for 6 tiles)
+          const delay = wordLength * 80 + 500;
+          setTimeout(() => setAnimatingRow(null), delay);
         });
         return;
       }
@@ -126,20 +131,23 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
         currentGuess={currentGuess}
         currentRow={currentRow}
         animatingRow={animatingRow}
+        shakeRow={shakeRow}
       />
 
       {message && (
-        <p className="mt-4 text-[#b59f3b] text-sm font-medium animate-pop">{message}</p>
+        <p className="mt-4 px-4 py-2 rounded-lg bg-[#2a2a2c] border border-[#3a3a3c] text-[#e8c547] text-sm font-medium animate-pop inline-block">
+          {message}
+        </p>
       )}
 
       {state === "won" && (
-        <div className="mt-6 text-center space-y-4">
-          <p className="text-xl font-bold text-[#538d4e]">You got it!</p>
+        <div className="mt-8 text-center space-y-5">
+          <p className="text-2xl font-bold text-[#538d4e]">You got it!</p>
           {hasMoreWords ? (
             <button
               type="button"
               onClick={handleNextLevel}
-              className="px-6 py-2.5 rounded font-medium bg-[#538d4e] text-white hover:bg-[#4a7d45] transition-colors"
+              className="px-7 py-3 rounded-lg font-semibold bg-[#538d4e] text-white hover:bg-[#4a7d45] active:scale-[0.98] transition-all shadow-lg shadow-[#538d4e]/20"
             >
               Next word
             </button>
@@ -150,7 +158,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
       )}
 
       {state === "lost" && (
-        <div className="mt-6 text-center space-y-4">
+        <div className="mt-8 text-center space-y-5">
           <p className="text-xl font-bold text-[#86888a]">Better luck next time</p>
           {revealedWord && (
             <p className="text-lg">
@@ -161,7 +169,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
             <button
               type="button"
               onClick={handleNextLevel}
-              className="px-6 py-2.5 rounded font-medium bg-[#538d4e] text-white hover:bg-[#4a7d45] transition-colors"
+              className="px-7 py-3 rounded-lg font-semibold bg-[#538d4e] text-white hover:bg-[#4a7d45] active:scale-[0.98] transition-all shadow-lg shadow-[#538d4e]/20"
             >
               Next word
             </button>

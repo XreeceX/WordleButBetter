@@ -18,7 +18,7 @@ export function Keyboard({ onKey, keyStatus, disabled }: Props) {
   const keyClass = (key: string) => {
     const status = keyStatus[key];
     const base =
-      "min-w-[2rem] h-14 rounded font-medium text-sm uppercase transition-colors flex items-center justify-center select-none";
+      "min-w-[2rem] h-12 sm:h-14 rounded-md font-medium text-sm uppercase transition-all duration-150 flex items-center justify-center select-none active:scale-95";
     if (disabled) return `${base} bg-[#3a3a3c] text-[#86888a] cursor-not-allowed`;
     if (status === "correct") return `${base} bg-[#538d4e] text-white hover:bg-[#4a7d45] cursor-pointer`;
     if (status === "present") return `${base} bg-[#b59f3b] text-white hover:bg-[#a08d34] cursor-pointer`;
@@ -26,9 +26,12 @@ export function Keyboard({ onKey, keyStatus, disabled }: Props) {
     return `${base} bg-[#818384] text-white hover:bg-[#6b6b6d] cursor-pointer`;
   };
 
+  const specialKeyClass =
+    "min-w-[2.5rem] h-12 sm:h-14 px-3 rounded-md font-medium text-sm bg-[#818384] text-white hover:bg-[#6b6b6d] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-150 active:scale-95";
+
   return (
-    <div className="w-full max-w-lg mx-auto mt-6 space-y-2 px-2">
-      <div className="flex justify-center gap-1">
+    <div className="w-full max-w-lg mx-auto mt-8 space-y-2 px-2">
+      <div className="flex justify-center gap-1.5">
         {ROW1.split("").map((k) => (
           <button
             key={k}
@@ -41,7 +44,7 @@ export function Keyboard({ onKey, keyStatus, disabled }: Props) {
           </button>
         ))}
       </div>
-      <div className="flex justify-center gap-1">
+      <div className="flex justify-center gap-1.5">
         {ROW2.split("").map((k) => (
           <button
             key={k}
@@ -54,12 +57,12 @@ export function Keyboard({ onKey, keyStatus, disabled }: Props) {
           </button>
         ))}
       </div>
-      <div className="flex justify-center gap-1">
+      <div className="flex justify-center gap-1.5">
         <button
           type="button"
           onClick={() => onKey("Enter")}
           disabled={disabled}
-          className="min-w-[3rem] h-14 px-4 rounded font-medium text-sm bg-[#818384] text-white hover:bg-[#6b6b6d] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className={specialKeyClass}
         >
           Enter
         </button>
@@ -78,7 +81,7 @@ export function Keyboard({ onKey, keyStatus, disabled }: Props) {
           type="button"
           onClick={() => onKey("Backspace")}
           disabled={disabled}
-          className="min-w-[3rem] h-14 px-4 rounded font-medium text-sm bg-[#818384] text-white hover:bg-[#6b6b6d] cursor-pointer"
+          className={specialKeyClass}
         >
           ⌫
         </button>

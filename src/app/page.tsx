@@ -25,27 +25,27 @@ export default async function HomePage() {
   return (
     <SessionProvider>
       <div className="min-h-screen flex flex-col bg-[#121213]">
-        <header className="border-b border-[#3a3a3c] px-4 py-3 flex items-center justify-between">
-          <h1 className="text-xl font-bold tracking-tight">Wordle But Better</h1>
+        <header className="border-b border-[#3a3a3c] bg-[#1a1a1b]/80 backdrop-blur-sm px-4 py-3.5 flex items-center justify-between">
+          <h1 className="text-xl font-bold tracking-tight text-white">Wordle But Better</h1>
           <div className="flex items-center gap-4">
             {stats && (
-              <div className="hidden sm:flex gap-4 text-sm text-[#86888a]">
-                <span>Played: {stats.gamesPlayed}</span>
-                <span>Solved: {stats.wordsSolved}</span>
-                <span>Streak: {stats.currentStreak}</span>
-                <span>Max: {stats.maxStreak}</span>
+              <div className="hidden sm:flex gap-5 text-sm text-[#86888a]">
+                <span className="tabular-nums">Played: {stats.gamesPlayed}</span>
+                <span className="tabular-nums">Solved: {stats.wordsSolved}</span>
+                <span className="tabular-nums">Streak: {stats.currentStreak}</span>
+                <span className="tabular-nums">Max: {stats.maxStreak}</span>
               </div>
             )}
             <Link
               href="/api/auth/signout"
-              className="text-sm text-[#86888a] hover:text-white transition-colors"
+              className="text-sm text-[#86888a] hover:text-white transition-colors rounded px-2 py-1 -m-1"
             >
               Sign out
             </Link>
           </div>
         </header>
 
-        <main className="flex-1 flex flex-col items-center pt-6 pb-8 px-4">
+        <main className="flex-1 flex flex-col items-center pt-8 pb-10 px-4">
           {gameState === null && !hasMoreWords ? (
             <div className="text-center max-w-md mx-auto space-y-4 py-12">
               <h2 className="text-2xl font-bold">You&apos;ve solved all available words!</h2>

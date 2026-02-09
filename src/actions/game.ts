@@ -8,6 +8,7 @@ import {
   userStats,
   gameSessions,
 } from "@/db/schema";
+import { isWordValid } from "@/lib/wordCheck";
 import { eq, and, notInArray, sql } from "drizzle-orm";
 import { randomUUID } from "crypto";
 import { evaluateGuess, isWordLengthValid } from "@/lib/game";
@@ -171,13 +172,8 @@ export async function submitGuess(
     return { ok: false, error: "Wrong word length" };
 
   const target = wordRow.word;
-  const inDictionary = await db
-    .select({ id: words.id })
-    .from(words)
-    .where(and(eq(words.word, g), eq(words.length, g.length)))
-    .limit(1);
-
-  if (inDictionary.length === 0)
+  const inDictionary = await isWordValid(g, target.length);
+  if (!inDictionary)
     return { ok: false, error: "Not in dictionary" };
 
   const evaluation = evaluateGuess(g, target);

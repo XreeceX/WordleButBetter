@@ -77,6 +77,16 @@ export const words = pgTable(
   ]
 );
 
+/** LLM-approved guess words (not necessarily in target list). Caches so we don't call API repeatedly. */
+export const validGuesses = pgTable(
+  "valid_guesses",
+  {
+    word: text("word").primaryKey(),
+    length: integer("length").notNull(),
+  },
+  (table) => [index("valid_guesses_length_idx").on(table.length)]
+);
+
 /** Per-user progress: which words they've solved or attempted. */
 export const userWordProgress = pgTable(
   "user_word_progress",
