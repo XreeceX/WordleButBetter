@@ -86,6 +86,8 @@ npm run db:push
 npm run db:seed
 ```
 
+**If you get `relation "valid_guesses" does not exist`:** Run `npm run db:push` again with production `DATABASE_URL`, or in Neon Console → SQL Editor run `drizzle/add-valid-guesses.sql`.
+
 If you don’t have a local `.env` yet:
 
 1. Copy `.env.example` to `.env`.
