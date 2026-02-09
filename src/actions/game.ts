@@ -116,7 +116,8 @@ export async function getOrCreateGameState(): Promise<GameState | null> {
     state: "playing",
   });
 
-  revalidatePath("/");
+  // Do not call revalidatePath here: getOrCreateGameState can run during page render,
+  // and revalidatePath during render is not allowed. The response already has the new state.
   return {
     sessionId,
     wordLength: wordResult.length,
