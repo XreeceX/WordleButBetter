@@ -23,11 +23,11 @@
   --app-height: 100vh;
 }
 
-/* Desktop: 2x keyboard key size (container + key dimensions) */
+/* Desktop: larger keyboard (reduced 20% from 2x for better fit) */
 @media (min-width: 769px) {
   :root {
-    --key-min-width: clamp(3rem, 6.8vw, 6.5rem);
-    --key-height: clamp(4.5rem, 11.6vh, 9.5rem);
+    --key-min-width: clamp(2.4rem, 5.44vw, 5.2rem);
+    --key-height: clamp(3.6rem, 9.28vh, 7.6rem);
   }
 }
 
