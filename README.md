@@ -60,11 +60,13 @@ Open [http://localhost:3000](http://localhost:3000). Sign up or log in, then pla
 
 ## Deploy to Vercel
 
+**Important:** This repo is public. All secrets (database URL, API keys, auth secrets) must be set in **Vercel → Project → Settings → Environment Variables**, not in the codebase.
+
 1. Push the repo to GitHub and import the project in Vercel.
-2. Create a Neon database and add **`DATABASE_URL`** to Vercel env.
-3. Set **`AUTH_SECRET`** and **`NEXTAUTH_URL`** (e.g. `https://your-app.vercel.app`).
-4. Optionally add **`AUTH_GOOGLE_ID`** and **`AUTH_GOOGLE_SECRET`** for Google sign-in.
-5. Deploy. After the first deploy, run migrations and seed from your machine (with production `DATABASE_URL` in `.env`) or use a one-off script/CI step:
+2. Create a Neon database and add **`DATABASE_URL`** in Vercel env (pooled connection string).
+3. Set **`AUTH_SECRET`** and **`NEXTAUTH_URL`** (e.g. `https://your-app.vercel.app`) in Vercel.
+4. Optionally add **`AUTH_GOOGLE_ID`**, **`AUTH_GOOGLE_SECRET`**, and **`GROQ_API_KEY`** in Vercel.
+5. Deploy. After the first deploy, run migrations and seed from your machine (with production `DATABASE_URL` in local `.env`) or use a one-off script/CI step:
    - `npm run db:push`
    - `npm run db:seed`
 
