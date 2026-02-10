@@ -152,9 +152,38 @@ export const gameSessions = pgTable(
   ]
 );
 
+/** Daily challenge: one row per user per day (UTC date). Same word for everyone. */
+export const dailySessions = pgTable(
+  "daily_sessions",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    date: text("date").notNull(), // YYYY-MM-DD UTC
+    wordId: text("word_id")
+      .notNull()
+      .references(() => words.id, { onDelete: "cascade" }),
+    attempts: integer("attempts").notNull().default(0),
+    maxAttempts: integer("max_attempts").notNull().default(6),
+    state: text("state").notNull().default("playing"),
+    guessHistory: text("guess_history"),
+    evaluationHistory: text("evaluation_history"),
+    hintsUsed: integer("hints_used").notNull().default(0),
+    hintPositions: text("hint_positions"),
+    powerHintUsed: integer("power_hint_used").notNull().default(0),
+    completedAt: timestamp("completed_at", { mode: "date" }),
+    updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.userId, table.date] }),
+    index("daily_sessions_date_idx").on(table.date),
+  ]
+);
+
 // Types for schema
 export type User = typeof users.$inferSelect;
 export type Word = typeof words.$inferSelect;
 export type UserWordProgress = typeof userWordProgress.$inferSelect;
 export type UserStats = typeof userStats.$inferSelect;
 export type GameSession = typeof gameSessions.$inferSelect;
+export type DailySession = typeof dailySessions.$inferSelect;

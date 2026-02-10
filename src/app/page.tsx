@@ -62,12 +62,20 @@ export default async function HomePage() {
                 <span className="tabular-nums">Max: {stats.maxStreak}</span>
               </div>
             )}
-            <Link
-              href="/api/auth/signout"
-              className="text-sm text-[var(--text-muted)] hover:text-white transition-colors rounded-lg px-2 py-1 -m-1"
-            >
-              Sign out
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/daily"
+                className="text-sm font-medium text-[var(--accent)] hover:text-white transition-colors rounded-lg px-3 py-1.5 -m-1 border border-[var(--accent)]/50 hover:bg-[var(--accent)]/10"
+              >
+                Daily Challenge
+              </Link>
+              <Link
+                href="/api/auth/signout"
+                className="text-sm text-[var(--text-muted)] hover:text-white transition-colors rounded-lg px-2 py-1 -m-1"
+              >
+                Sign out
+              </Link>
+            </div>
           </div>
         </header>
 

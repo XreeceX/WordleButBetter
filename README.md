@@ -9,6 +9,7 @@ A production-ready Wordle-style word guessing game with 5–7 letter words, buil
 - **Broader dictionary**: Guesses can be validated with a free LLM (Groq/Llama) when not in the seed list (e.g. “locate”); results are cached
 - **Staggered tile flip** and row shake animations on submit
 - **On-screen + physical keyboard** with dynamic key states (green overrides yellow/gray; gray disabled)
+- **Daily Challenge**: One word per day (same for everyone), resets at midnight UTC; rankings by fewest attempts
 - **Auth**: Email/password and Google OAuth via NextAuth.js
 - **User stats**: Games played, words solved, current and max streak
 - **Dark theme**, minimal UI, tile flip animations, responsive layout
@@ -88,5 +89,6 @@ Open [http://localhost:3000](http://localhost:3000). Sign up or log in, then pla
 - **user_word_progress** – Per-user solved/attempted words
 - **user_stats** – Games played, words solved, streaks
 - **game_sessions** – Active game (word reference, attempts, guess/evaluation history)
+- **daily_sessions** – Daily challenge (one row per user per UTC date; same word for everyone)
 
 Word selection is server-side only; the target word is never sent to the client until the game is over (win or lose).
