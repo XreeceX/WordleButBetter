@@ -19,10 +19,27 @@
 
 body {
   background: var(--background);
-  background-image: radial-gradient(ellipse 80% 50% at 50% -20%, var(--accent-glow), transparent),
-    linear-gradient(180deg, var(--background) 0%, #0a0a0c 100%);
+  background-image:
+    radial-gradient(ellipse 120% 80% at 50% -30%, rgba(167, 139, 250, 0.12), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(34, 197, 94, 0.06), transparent 45%),
+    radial-gradient(ellipse 50% 30% at 20% 80%, rgba(234, 179, 8, 0.05), transparent 40%),
+    linear-gradient(180deg, #0d0d0f 0%, #08080a 50%, #050507 100%);
+  background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
+}
+
+/* Subtle grid overlay for depth (dark theme) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
 }
 
 @keyframes flip-in {
