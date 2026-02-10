@@ -29,11 +29,6 @@ export type DailyRankEntry = {
   isCurrentUser?: boolean;
 };
 
-/** Today's date in UTC (YYYY-MM-DD). */
-export function getTodayUTC(): string {
-  return new Date().toISOString().slice(0, 10);
-}
-
 /** Deterministic word id for a given date (same for everyone). Uses 5-letter words only. */
 export async function getDailyWordId(date: string): Promise<string | null> {
   const list = await db

@@ -1,11 +1,8 @@
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import {
-  getTodayUTC,
-  getOrCreateDailyState,
-  getDailyRankings,
-} from "@/actions/daily";
+import { getTodayUTC } from "@/lib/daily";
+import { getOrCreateDailyState, getDailyRankings } from "@/actions/daily";
 import { DailyGameClient } from "@/components/DailyGameClient";
 
 export default async function DailyChallengePage() {
