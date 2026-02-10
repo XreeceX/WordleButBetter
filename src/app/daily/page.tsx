@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getTodayUTC } from "@/lib/daily";
 import { getOrCreateDailyState, getDailyRankings } from "@/actions/daily";
 import { DailyGameClient } from "@/components/DailyGameClient";
+import { DailyResetTimer } from "@/components/DailyResetTimer";
 
 export default async function DailyChallengePage() {
   const session = await auth();
@@ -42,7 +43,7 @@ export default async function DailyChallengePage() {
             Daily Challenge
           </h1>
         </div>
-        <p className="hidden sm:block text-sm text-[var(--text-muted)]">Resets midnight UTC</p>
+        <DailyResetTimer />
       </header>
 
       <div className="flex-1 min-h-0 flex flex-col lg:flex-row gap-4 lg:gap-6 p-3 lg:p-4 max-w-7xl w-full mx-auto overflow-hidden">
