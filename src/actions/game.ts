@@ -14,8 +14,6 @@ import { randomUUID } from "crypto";
 import { evaluateGuess, isWordLengthValid } from "@/lib/game";
 import { revalidatePath } from "next/cache";
 
-const WORD_LENGTHS = [5, 6, 7] as const;
-
 export type GameState = {
   sessionId: string;
   wordLength: number;
@@ -27,9 +25,9 @@ export type GameState = {
   powerHintUsed: boolean;
 };
 
-/** Get random length 5–7 for this level. */
-function randomLength(): number {
-  return WORD_LENGTHS[Math.floor(Math.random() * WORD_LENGTHS.length)];
+/** Allowed lengths by progress: 5 only <500 solved, +6 at 500, +7 at 800. Pool gives 1/2, 1/4, 1/4. */
+function getLengthPool(wordsSolved: number): number[] {
+  return wordsSolved < 500 ? [5] : wordsSolved < 800 ? [5, 5, 6] : [5, 5, 6, 7];
 }
 
 /** Fetch a random word that the user has not solved (by length). */
@@ -105,10 +103,21 @@ export async function getOrCreateGameState(): Promise<GameState | null> {
     };
   }
 
-  const length = randomLength();
-  const wordResult = await getRandomWordForUser(userId, length);
+  const [statsRow] = await db
+    .select({ wordsSolved: userStats.wordsSolved })
+    .from(userStats)
+    .where(eq(userStats.userId, userId))
+    .limit(1);
+  const wordsSolved = statsRow?.wordsSolved ?? 0;
+  const pool = getLengthPool(wordsSolved);
+  let wordResult: { wordId: string; length: number } | null = null;
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  for (const len of shuffled) {
+    wordResult = await getRandomWordForUser(userId, len);
+    if (wordResult) break;
+  }
   if (!wordResult) {
-    return null; // no words left — caller should show "all solved"
+    return null; // no words left in any allowed length
   }
 
   const sessionId = randomUUID();
@@ -300,8 +309,19 @@ export async function startNextLevel(): Promise<GameState | null> {
   const userId = session?.user?.id;
   if (!userId) return null;
 
-  const length = randomLength();
-  const wordResult = await getRandomWordForUser(userId, length);
+  const [statsRow] = await db
+    .select({ wordsSolved: userStats.wordsSolved })
+    .from(userStats)
+    .where(eq(userStats.userId, userId))
+    .limit(1);
+  const wordsSolved = statsRow?.wordsSolved ?? 0;
+  const pool = getLengthPool(wordsSolved);
+  let wordResult: { wordId: string; length: number } | null = null;
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  for (const len of shuffled) {
+    wordResult = await getRandomWordForUser(userId, len);
+    if (wordResult) break;
+  }
   if (!wordResult) return null;
 
   const sessionId = randomUUID();

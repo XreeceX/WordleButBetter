@@ -30,7 +30,7 @@ export function Keyboard({ onKey, keyStatus, disabled }: Props) {
     "keyboard-key keyboard-key-special rounded-lg font-medium bg-[var(--key-bg)] text-white hover:bg-[#52525b] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-150 active:scale-95";
 
   return (
-    <div className="w-full max-w-2xl mx-auto shrink-0 px-1 keyboard-rows">
+    <div className="keyboard-container w-full mx-auto shrink-0 px-1 keyboard-rows">
       <div className="flex justify-center keyboard-row">
         {ROW1.split("").map((k) => (
           <button

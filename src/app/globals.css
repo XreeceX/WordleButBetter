@@ -19,7 +19,16 @@
   --tile-size: clamp(2.25rem, min(8vh, 8dvh, 5.5vw), 6.25rem);
   --key-height: clamp(2.25rem, min(5.8vh, 5.8dvh, 4vw), 4.75rem);
   --key-min-width: clamp(1.5rem, min(3.4vw, 4dvh), 3.25rem);
+  --keyboard-max-width: 42rem; /* max-w-2xl equivalent */
   --app-height: 100vh;
+}
+
+/* Mobile: wider keyboard (more of viewport, larger key min-width) */
+@media (max-width: 768px) {
+  :root {
+    --key-min-width: clamp(2rem, 5.5vw, 3.25rem);
+    --keyboard-max-width: min(42rem, 98vw);
+  }
 }
 
 @supports (height: 100dvh) {
@@ -183,4 +192,8 @@ body::before {
   min-width: max(2.5rem, calc(var(--key-min-width) * 1.2));
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+}
+
+.keyboard-container {
+  max-width: var(--keyboard-max-width, 42rem);
 }
