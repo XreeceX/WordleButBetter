@@ -23,7 +23,15 @@
   --app-height: 100vh;
 }
 
-/* Mobile: keep original keyboard width (unchanged) */
+/* Desktop: 2x keyboard key size (container + key dimensions) */
+@media (min-width: 769px) {
+  :root {
+    --key-min-width: clamp(3rem, 6.8vw, 6.5rem);
+    --key-height: clamp(4.5rem, 11.6vh, 9.5rem);
+  }
+}
+
+/* Mobile: keep original keyboard (unchanged) */
 @media (max-width: 768px) {
   :root {
     --keyboard-max-width: 42rem;
