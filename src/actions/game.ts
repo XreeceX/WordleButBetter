@@ -368,9 +368,19 @@ export async function requestLetterHint(
   const target = wordRow.word;
   const wordLength = target.length;
   const hintPositions: number[] = game.hintPositions ? JSON.parse(game.hintPositions) : [];
-  const available = Array.from({ length: wordLength }, (_, i) => i).filter((i) => !hintPositions.includes(i));
+  const evaluationHistory: Array<Array<"correct" | "present" | "absent">> =
+    game.evaluationHistory ? JSON.parse(game.evaluationHistory) : [];
+  const correctPositions = new Set<number>();
+  for (const row of evaluationHistory) {
+    for (let col = 0; col < row.length && col < wordLength; col++) {
+      if (row[col] === "correct") correctPositions.add(col);
+    }
+  }
+  const available = Array.from({ length: wordLength }, (_, i) => i).filter(
+    (i) => !hintPositions.includes(i) && !correctPositions.has(i)
+  );
   if (available.length === 0)
-    return { ok: false, error: "All positions already revealed" };
+    return { ok: false, error: "No hintable positions left (rest are correct or already hinted)" };
 
   const pos = available[Math.floor(Math.random() * available.length)];
   const letter = target[pos];
