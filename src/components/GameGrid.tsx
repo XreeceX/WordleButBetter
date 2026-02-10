@@ -27,11 +27,11 @@ export function GameGrid({
   const cols = wordLength;
 
   return (
-    <div className="flex flex-col gap-2 mx-auto w-full max-w-md" style={{ perspective: "1000px" }}>
+    <div className="flex flex-col gap-3 mx-auto w-full max-w-xl" style={{ perspective: "1000px" }}>
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div
           key={rowIndex}
-          className={`flex justify-center gap-1.5 ${shakeRow === rowIndex ? "animate-shake" : ""}`}
+          className={`flex justify-center gap-2 ${shakeRow === rowIndex ? "animate-shake" : ""}`}
         >
           {Array.from({ length: cols }).map((_, colIndex) => {
             const isFilled = rowIndex < attempts.length || (rowIndex === currentRow && currentGuess.length > colIndex);
@@ -50,8 +50,8 @@ export function GameGrid({
               <div
                 key={colIndex}
                 className={`
-                  flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 text-2xl font-bold uppercase
-                  border-2 rounded-md
+                  flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 text-2xl sm:text-3xl font-bold uppercase
+                  border-2 rounded-lg
                   transition-all duration-150
                   ${staggerClass}
                   ${

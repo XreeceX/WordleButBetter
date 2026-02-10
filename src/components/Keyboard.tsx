@@ -18,7 +18,7 @@ export function Keyboard({ onKey, keyStatus, disabled }: Props) {
   const keyClass = (key: string) => {
     const status = keyStatus[key];
     const base =
-      "min-w-[2rem] h-12 sm:h-14 rounded-xl font-medium text-sm uppercase transition-all duration-150 flex items-center justify-center select-none active:scale-95";
+      "min-w-[2.5rem] h-14 sm:h-16 rounded-xl font-medium text-base uppercase transition-all duration-150 flex items-center justify-center select-none active:scale-95";
     if (disabled) return `${base} bg-[var(--absent)] text-[var(--text-muted)] cursor-not-allowed`;
     if (status === "correct") return `${base} bg-[var(--correct)] text-white hover:opacity-90 cursor-pointer shadow-sm shadow-[var(--correct-glow)]`;
     if (status === "present") return `${base} bg-[var(--present)] text-white hover:opacity-90 cursor-pointer shadow-sm shadow-[var(--present-glow)]`;
@@ -27,11 +27,11 @@ export function Keyboard({ onKey, keyStatus, disabled }: Props) {
   };
 
   const specialKeyClass =
-    "min-w-[2.5rem] h-12 sm:h-14 px-3 rounded-xl font-medium text-sm bg-[var(--key-bg)] text-white hover:bg-[#52525b] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-150 active:scale-95";
+    "min-w-[3rem] h-14 sm:h-16 px-4 rounded-xl font-medium text-sm sm:text-base bg-[var(--key-bg)] text-white hover:bg-[#52525b] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-150 active:scale-95";
 
   return (
-    <div className="w-full max-w-lg mx-auto mt-8 space-y-2 px-2">
-      <div className="flex justify-center gap-1.5">
+    <div className="w-full max-w-2xl mx-auto mt-8 space-y-3 px-2">
+      <div className="flex justify-center gap-2">
         {ROW1.split("").map((k) => (
           <button
             key={k}
@@ -44,7 +44,7 @@ export function Keyboard({ onKey, keyStatus, disabled }: Props) {
           </button>
         ))}
       </div>
-      <div className="flex justify-center gap-1.5">
+      <div className="flex justify-center gap-2">
         {ROW2.split("").map((k) => (
           <button
             key={k}
@@ -57,7 +57,7 @@ export function Keyboard({ onKey, keyStatus, disabled }: Props) {
           </button>
         ))}
       </div>
-      <div className="flex justify-center gap-1.5">
+      <div className="flex justify-center gap-2">
         <button
           type="button"
           onClick={() => onKey("Enter")}
