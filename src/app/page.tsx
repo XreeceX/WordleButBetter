@@ -50,7 +50,7 @@ export default async function HomePage() {
 
   return (
     <SessionProvider>
-      <div className="relative z-10 min-h-screen min-h-[100dvh] h-[100dvh] max-h-[100dvh] overflow-y-auto overflow-x-hidden flex flex-col">
+      <div className="app-shell relative z-10 min-h-screen min-h-[100dvh] h-[100dvh] max-h-[100dvh] overflow-y-auto overflow-x-hidden flex flex-col">
         <header className="flex-shrink-0 border-b border-[var(--border)] bg-[var(--surface)]/90 backdrop-blur-md px-4 py-3.5 flex items-center justify-between shadow-lg shadow-black/20">
           <h1 className="text-xl font-bold tracking-tight text-white drop-shadow-sm">Wordle But Better</h1>
           <div className="flex items-center gap-4">

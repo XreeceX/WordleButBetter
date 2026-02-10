@@ -163,7 +163,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
   const keyStatus = getKeyStatusFromEvaluations(attempts, evaluations);
 
   return (
-    <div className="flex flex-col items-center max-h-full overflow-hidden py-1 gap-[min(0.5rem,1.5vh)]">
+    <div className="flex flex-col items-center min-h-0 w-full py-1 gap-[min(0.5rem,1.5vh)]">
       <GameGrid
         wordLength={wordLength}
         maxAttempts={maxAttempts}

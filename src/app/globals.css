@@ -48,6 +48,28 @@ body {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
+/* Landscape: let app grow so page scrolls; smaller tiles/keys to fit short viewport */
+@media (orientation: landscape) and (max-height: 500px) {
+  :root {
+    --tile-size: clamp(1.5rem, min(6dvh, 4.5vw), 2.5rem);
+    --key-height: clamp(1.5rem, min(5dvh, 3.5vw), 2.25rem);
+    --key-min-width: clamp(1rem, min(3dvh, 2.5vw), 1.75rem);
+  }
+}
+
+.app-shell {
+  /* Portrait: fixed viewport height, inner scroll */
+}
+@media (orientation: landscape) {
+  .app-shell {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100dvh;
+    overflow-y: visible;
+    overflow-x: hidden;
+  }
+}
+
 /* Subtle grid overlay for depth (dark theme) */
 body::before {
   content: "";
