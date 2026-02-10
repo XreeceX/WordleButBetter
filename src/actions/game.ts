@@ -467,7 +467,7 @@ export async function getPowerHint(
   return { ok: true, hint };
 }
 
-async function fetchMeaningHint(word: string, apiKey: string): Promise<string | null> {
+export async function fetchMeaningHint(word: string, apiKey: string): Promise<string | null> {
   try {
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",

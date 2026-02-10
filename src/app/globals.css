@@ -31,9 +31,12 @@
   }
 }
 
-/* Mobile: keep original keyboard (unchanged) */
+/* Mobile: slightly larger tiles and keyboard for better touch targets */
 @media (max-width: 768px) {
   :root {
+    --tile-size: clamp(2.75rem, min(9vh, 9dvh, 6vw), 6.25rem);
+    --key-height: clamp(2.75rem, min(6.5vh, 6.5dvh, 4.5vw), 4.75rem);
+    --key-min-width: clamp(1.9rem, min(4vw, 4.5dvh), 3.25rem);
     --keyboard-max-width: 42rem;
   }
 }

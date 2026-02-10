@@ -48,6 +48,18 @@ export const WORDS_5 = [
   "visit", "vital", "voice", "waste", "watch", "water", "wheel", "where", "which", "while",
   "white", "whole", "whose", "woman", "world", "worry", "worse", "worst", "worth", "would",
   "write", "wrong", "yield", "young", "youth",
+  "adapt", "admit", "adopt", "alike", "alive", "arrow", "bacon", "badge", "basin", "batch",
+  "belly", "berry", "bound", "brave", "brick", "bride", "cable", "candy", "cargo", "carve",
+  "cater", "cease",   "cello", "champ", "chant", "cheat", "cheek", "cheer", "chess",
+  "chord", "chunk", "civic", "clamp", "clerk", "clone", "comic", "comma", "condo", "coral", "couch",
+  "cough", "crate", "creep", "crisp", "cubic", "curly", "curse", "cyber", "decay", "defer",
+  "demon", "depot", "deter", "digit", "ditch", "diver", "donor", "drain", "drank",
+  "drift", "drill", "drone", "drunk", "dwell", "eagle", "eaten", "edict", "elbow", "embed",
+  "erect", "essay", "excel", "exile", "faint", "fairy", "feast", "fence", "ferry", "fetch", "flame",
+  "flesh", "float", "foamy", "forge", "fraud", "fuzzy", "glory", "grave", "greet", "guilt",
+  "harsh", "hobby", "honey", "honor", "humor", "imply", "ivory", "knack", "labor", "laser",
+  "lemon", "liner", "loyal", "lyric", "mercy", "naked", "nerve", "olive", "oxide", "peach",
+  "piano", "proxy", "pulse", "radar", "rusty", "snake", "swell", "vapor", "wagon", "wrath",
 ];
 
 export const WORDS_6 = [

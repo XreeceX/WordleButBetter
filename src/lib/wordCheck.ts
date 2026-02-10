@@ -50,7 +50,10 @@ async function checkWordWithGroq(word: string, apiKey: string): Promise<boolean>
         messages: [
           {
             role: "user",
-            content: `Is "${word}" a valid English word (as used in word games like Scrabble or Wordle)? Answer only YES or NO.`,
+            content: `Is "${word}" a valid English word (as used in word games like Scrabble or Wordle)? \
+Accept: plurals (e.g. words, cats, boxes), past tense (e.g. walked, tried), -ing forms (e.g. running), \
+comparatives (e.g. bigger), and other standard inflections. Only reject if it is not a real English word. \
+Answer only YES or NO.`,
           },
         ],
         max_tokens: 10,

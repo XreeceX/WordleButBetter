@@ -7,7 +7,7 @@ import { GameGrid } from "./GameGrid";
 import { Keyboard, getKeyStatusFromEvaluations } from "./Keyboard";
 import type { DailyGameState } from "@/actions/daily";
 import type { LetterStatus } from "@/lib/game";
-import { submitDailyGuess, getDailyRevealWord } from "@/actions/daily";
+import { submitDailyGuess, getDailyRevealWord, getDailyPowerHint } from "@/actions/daily";
 
 type Props = {
   date: string;
@@ -28,6 +28,9 @@ export function DailyGameClient({ date, initialState }: Props) {
   const [revealedWord, setRevealedWord] = useState<string | null>(null);
   const [animatingRow, setAnimatingRow] = useState<number | null>(null);
   const [shakeRow, setShakeRow] = useState<number | null>(null);
+  const [powerHintUsed, setPowerHintUsed] = useState(initialState.powerHintUsed);
+  const [powerHintText, setPowerHintText] = useState<string | null>(null);
+  const [hintLoading, setHintLoading] = useState(false);
 
   const currentRow = attempts.length;
 
@@ -99,6 +102,19 @@ export function DailyGameClient({ date, initialState }: Props) {
     }
   }, [state, date]);
 
+  const handlePowerHint = useCallback(async () => {
+    if (hintLoading || powerHintUsed) return;
+    setHintLoading(true);
+    const result = await getDailyPowerHint(date);
+    setHintLoading(false);
+    if (result.ok) {
+      setPowerHintUsed(true);
+      setPowerHintText(result.hint);
+    } else {
+      setMessage(result.error);
+    }
+  }, [date, hintLoading, powerHintUsed]);
+
   const keyStatus = getKeyStatusFromEvaluations(attempts, evaluations);
 
   return (
@@ -114,10 +130,28 @@ export function DailyGameClient({ date, initialState }: Props) {
         shakeRow={shakeRow}
       />
 
+      {powerHintText && (
+        <p className="shrink-0 px-3 py-2 rounded-xl bg-violet-500/10 border border-violet-500/30 text-violet-200 text-sm italic max-w-md animate-pop">
+          &ldquo;{powerHintText}&rdquo;
+        </p>
+      )}
       {message && (
         <p className="shrink-0 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm font-medium animate-pop inline-block">
           {message}
         </p>
+      )}
+
+      {state === "playing" && (
+        <div className="shrink-0 flex flex-wrap items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={handlePowerHint}
+            disabled={hintLoading || powerHintUsed}
+            className="px-4 py-2 rounded-xl font-medium text-sm bg-violet-600 hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all active:scale-95 shadow-md shadow-violet-900/30"
+          >
+            {powerHintUsed ? "Power hint used" : "✨ Power hint"}
+          </button>
+        </div>
       )}
 
       {state === "won" && (

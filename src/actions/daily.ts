@@ -7,6 +7,7 @@ import { words, dailySessions, users } from "@/db/schema";
 import { eq, and, asc } from "drizzle-orm";
 import { isWordValid } from "@/lib/wordCheck";
 import { evaluateGuess, isWordLengthValid } from "@/lib/game";
+import { fetchMeaningHint } from "@/actions/game";
 import { revalidatePath } from "next/cache";
 
 export type DailyGameState = {
@@ -182,6 +183,61 @@ export async function submitDailyGuess(
 
   revalidatePath("/daily");
   return { ok: true, evaluation, state: newState };
+}
+
+/** Get power hint for daily challenge (one per day). */
+export async function getDailyPowerHint(
+  date: string
+): Promise<{ ok: true; hint: string } | { ok: false; error: string }> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return { ok: false, error: "Not authenticated" };
+
+  const [daily] = await db
+    .select()
+    .from(dailySessions)
+    .where(
+      and(
+        eq(dailySessions.userId, userId),
+        eq(dailySessions.date, date)
+      )
+    )
+    .limit(1);
+
+  if (!daily || daily.state !== "playing")
+    return { ok: false, error: "No active daily game" };
+
+  if ((daily.powerHintUsed ?? 0) === 1)
+    return { ok: false, error: "Power hint already used today" };
+
+  const [wordRow] = await db
+    .select({ word: words.word })
+    .from(words)
+    .where(eq(words.id, daily.wordId))
+    .limit(1);
+  if (!wordRow) return { ok: false, error: "Word not found" };
+
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) return { ok: false, error: "Power hint not configured" };
+
+  const hint = await fetchMeaningHint(wordRow.word, apiKey);
+  if (!hint) return { ok: false, error: "Could not get hint" };
+
+  await db
+    .update(dailySessions)
+    .set({
+      powerHintUsed: 1,
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(dailySessions.userId, userId),
+        eq(dailySessions.date, date)
+      )
+    );
+
+  revalidatePath("/daily");
+  return { ok: true, hint };
 }
 
 /** Get the target word for daily (after game ended). */
