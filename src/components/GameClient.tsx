@@ -10,7 +10,7 @@ import {
   startNextLevel,
   getRevealWord,
   hasUnsolvedWordsLeft,
-  useLetterHint,
+  requestLetterHint,
   getPowerHint,
 } from "@/actions/game";
 
@@ -136,7 +136,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
     setHintLoading(true);
     setMessage(null);
     setLetterHintResult(null);
-    const result = await useLetterHint(sessionId);
+    const result = await requestLetterHint(sessionId);
     setHintLoading(false);
     if (result.ok) {
       setHintsUsed((n) => n + 1);

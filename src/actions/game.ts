@@ -329,8 +329,8 @@ export async function startNextLevel(): Promise<GameState | null> {
 
 const HINT_MAX = 4;
 
-/** Use a letter hint: reveals one random letter and its position (1-based). Max 4 per game. */
-export async function useLetterHint(
+/** Request a letter hint: reveals one random letter and its position (1-based). Max 4 per game. */
+export async function requestLetterHint(
   sessionId: string
 ): Promise<
   | { ok: true; letter: string; position: number }
