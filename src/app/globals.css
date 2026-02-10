@@ -15,13 +15,22 @@
   --text-muted: #71717a;
   --accent: #a78bfa;
   --accent-glow: rgba(167, 139, 250, 0.2);
-  /* Fit in 100vh: grid (6 rows) + hints + keyboard (3 rows) — large scale */
-  --tile-size: clamp(3rem, 8vh, 6.25rem);
-  --key-height: clamp(2.75rem, 5.8vh, 4.75rem);
-  --key-min-width: clamp(2.25rem, 4.2vw, 3.25rem);
+  /* Fit viewport: use dvh on mobile; min() so landscape/small height works */
+  --tile-size: clamp(2.25rem, min(8vh, 8dvh, 5.5vw), 6.25rem);
+  --key-height: clamp(2.25rem, min(5.8vh, 5.8dvh, 4vw), 4.75rem);
+  --key-min-width: clamp(1.5rem, min(3.4vw, 4dvh), 3.25rem);
+  --app-height: 100vh;
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --app-height: 100dvh;
+  }
 }
 
 body {
+  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--background);
   background-image:
     radial-gradient(ellipse 120% 80% at 50% -30%, rgba(167, 139, 250, 0.12), transparent 50%),
@@ -30,7 +39,13 @@ body {
     linear-gradient(180deg, #0d0d0f 0%, #08080a 50%, #050507 100%);
   background-attachment: fixed;
   color: var(--text);
-  min-height: 100vh;
+}
+
+.safe-area-padding {
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 /* Subtle grid overlay for depth (dark theme) */
