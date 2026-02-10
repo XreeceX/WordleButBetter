@@ -15,6 +15,10 @@
   --text-muted: #71717a;
   --accent: #a78bfa;
   --accent-glow: rgba(167, 139, 250, 0.2);
+  /* Fit in 100vh: grid (6 rows) + hints + keyboard (3 rows) */
+  --tile-size: clamp(2.25rem, 5.2vh, 4rem);
+  --key-height: clamp(2rem, 3.8vh, 3.5rem);
+  --key-min-width: clamp(1.5rem, 2.8vw, 2.5rem);
 }
 
 body {
@@ -120,4 +124,26 @@ body::before {
 .tile-absent {
   background-color: var(--absent);
   border-color: var(--border);
+}
+
+/* Keyboard fits in 100vh */
+.keyboard-rows {
+  display: flex;
+  flex-direction: column;
+  gap: min(0.35rem, 1vh);
+}
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  gap: min(0.25rem, 0.6vw);
+}
+.keyboard-key {
+  min-width: var(--key-min-width);
+  height: var(--key-height);
+  font-size: min(0.875rem, calc(var(--key-height) * 0.5));
+}
+.keyboard-key-special {
+  min-width: max(2.5rem, calc(var(--key-min-width) * 1.2));
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }

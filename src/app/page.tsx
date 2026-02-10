@@ -50,8 +50,8 @@ export default async function HomePage() {
 
   return (
     <SessionProvider>
-      <div className="relative z-10 min-h-screen flex flex-col">
-        <header className="border-b border-[var(--border)] bg-[var(--surface)]/90 backdrop-blur-md px-4 py-3.5 flex items-center justify-between shadow-lg shadow-black/20">
+      <div className="relative z-10 h-screen overflow-hidden flex flex-col">
+        <header className="flex-shrink-0 border-b border-[var(--border)] bg-[var(--surface)]/90 backdrop-blur-md px-4 py-3.5 flex items-center justify-between shadow-lg shadow-black/20">
           <h1 className="text-xl font-bold tracking-tight text-white drop-shadow-sm">Wordle But Better</h1>
           <div className="flex items-center gap-4">
             {stats && (
@@ -71,13 +71,11 @@ export default async function HomePage() {
           </div>
         </header>
 
-        <div className="flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 p-4 lg:p-6 max-w-7xl w-full mx-auto">
-          <aside className="w-full lg:w-64 flex-shrink-0 order-2 lg:order-1">
-            <div className="lg:sticky lg:top-6">
-              <Leaderboard entries={leaderboardEntries} currentUserId={session.user.id} />
-            </div>
+        <div className="flex-1 min-h-0 flex flex-col lg:flex-row gap-4 lg:gap-6 p-3 lg:p-4 max-w-7xl w-full mx-auto overflow-hidden">
+          <aside className="flex-shrink-0 order-2 lg:order-1 w-full lg:w-56 overflow-auto">
+            <Leaderboard entries={leaderboardEntries} currentUserId={session.user.id} />
           </aside>
-          <main className="flex-1 min-w-0 flex flex-col items-center pt-4 pb-10 lg:pt-8 order-1 lg:order-2">
+          <main className="flex-1 min-h-0 min-w-0 flex flex-col items-center justify-center order-1 lg:order-2 overflow-hidden">
             {gameState === null && !hasMoreWords ? (
               <div className="text-center max-w-md mx-auto space-y-4 py-12">
                 <h2 className="text-2xl font-bold">You&apos;ve solved all available words!</h2>

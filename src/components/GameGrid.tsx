@@ -27,14 +27,17 @@ export function GameGrid({
   const cols = wordLength;
 
   return (
-    <div className="flex flex-col gap-3 mx-auto w-full max-w-xl" style={{ perspective: "1000px" }}>
+    <div
+      className="flex flex-col mx-auto w-full max-w-xl shrink-0"
+      style={{ perspective: "1000px", gap: "min(0.4rem, 1.2vh)" }}
+    >
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div
           key={rowIndex}
-          className={`flex justify-center gap-2 ${shakeRow === rowIndex ? "animate-shake" : ""}`}
+          className={`flex justify-center ${shakeRow === rowIndex ? "animate-shake" : ""}`}
+          style={{ gap: "min(0.35rem, 1vh)" }}
         >
           {Array.from({ length: cols }).map((_, colIndex) => {
-            const isFilled = rowIndex < attempts.length || (rowIndex === currentRow && currentGuess.length > colIndex);
             const letter =
               rowIndex < attempts.length
                 ? attempts[rowIndex][colIndex]
@@ -43,17 +46,14 @@ export function GameGrid({
                   : "";
             const status: LetterStatus | null =
               rowIndex < evaluations.length ? evaluations[rowIndex][colIndex] ?? null : null;
-            const isAnimating = animatingRow === rowIndex;
-            const staggerClass = isAnimating && status ? `animate-flip-in stagger-${colIndex}` : "";
+            const staggerClass = animatingRow === rowIndex && status ? `animate-flip-in stagger-${colIndex}` : "";
 
             return (
               <div
                 key={colIndex}
                 className={`
-                  flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 text-2xl sm:text-3xl font-bold uppercase
-                  border-2 rounded-lg
-                  transition-all duration-150
-                  ${staggerClass}
+                  flex items-center justify-center font-bold uppercase border-2 rounded-lg
+                  transition-all duration-150 game-tile ${staggerClass}
                   ${
                     status === "correct"
                       ? "tile-correct text-white border-[var(--correct)]"
@@ -64,6 +64,11 @@ export function GameGrid({
                           : "bg-[var(--surface)] border-[var(--border)] text-white"
                   }
                 `}
+                style={{
+                  width: "var(--tile-size)",
+                  height: "var(--tile-size)",
+                  fontSize: "min(1.5rem, calc(var(--tile-size) * 0.55))",
+                }}
               >
                 {letter}
               </div>

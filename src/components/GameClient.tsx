@@ -163,7 +163,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
   const keyStatus = getKeyStatusFromEvaluations(attempts, evaluations);
 
   return (
-    <>
+    <div className="flex flex-col items-center max-h-full overflow-hidden py-1 gap-[min(0.5rem,1.5vh)]">
       <GameGrid
         wordLength={wordLength}
         maxAttempts={maxAttempts}
@@ -176,23 +176,23 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
       />
 
       {letterHintResult && (
-        <p className="mt-4 px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm font-medium animate-pop">
+        <p className="shrink-0 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm font-medium animate-pop">
           Letter at position {letterHintResult.position}: <span className="font-bold text-emerald-200">{letterHintResult.letter.toUpperCase()}</span>
         </p>
       )}
       {powerHintText && (
-        <p className="mt-3 px-4 py-3 rounded-xl bg-violet-500/10 border border-violet-500/30 text-violet-200 text-sm italic max-w-md animate-pop">
+        <p className="shrink-0 px-3 py-2 rounded-xl bg-violet-500/10 border border-violet-500/30 text-violet-200 text-sm italic max-w-md animate-pop">
           &ldquo;{powerHintText}&rdquo;
         </p>
       )}
       {message && (
-        <p className="mt-4 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm font-medium animate-pop inline-block">
+        <p className="shrink-0 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm font-medium animate-pop inline-block">
           {message}
         </p>
       )}
 
       {state === "playing" && (
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+        <div className="shrink-0 flex flex-wrap items-center justify-center gap-2">
           <button
             type="button"
             onClick={handleLetterHint}
@@ -213,7 +213,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
       )}
 
       {state === "won" && (
-        <div className="mt-8 text-center space-y-5">
+        <div className="shrink-0 mt-4 text-center space-y-4">
           <p className="text-2xl font-bold text-[var(--correct)] drop-shadow-[0_0_12px_var(--correct-glow)]">You got it!</p>
           {hasMoreWords ? (
             <button
@@ -230,7 +230,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
       )}
 
       {state === "lost" && (
-        <div className="mt-8 text-center space-y-5">
+        <div className="shrink-0 mt-4 text-center space-y-4">
           <p className="text-xl font-bold text-[var(--text-muted)]">Better luck next time</p>
           {revealedWord && (
             <p className="text-lg">
@@ -259,10 +259,10 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
       )}
 
       {(state === "won" || state === "lost") && (
-        <div className="mt-4 opacity-60">
+        <div className="shrink-0 opacity-60">
           <Keyboard onKey={() => {}} keyStatus={keyStatus} disabled />
         </div>
       )}
-    </>
+    </div>
   );
 }
