@@ -5,17 +5,16 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GameGrid } from "./GameGrid";
 import { Keyboard, getKeyStatusFromEvaluations } from "./Keyboard";
-import type { DailyGameState, DailyRankEntry } from "@/actions/daily";
+import type { DailyGameState } from "@/actions/daily";
 import type { LetterStatus } from "@/lib/game";
 import { submitDailyGuess, getDailyRevealWord } from "@/actions/daily";
 
 type Props = {
   date: string;
   initialState: DailyGameState;
-  rankings: DailyRankEntry[];
 };
 
-export function DailyGameClient({ date, initialState, rankings: initialRankings }: Props) {
+export function DailyGameClient({ date, initialState }: Props) {
   const router = useRouter();
   const [wordLength] = useState(initialState.wordLength);
   const [attempts, setAttempts] = useState<string[]>(initialState.attempts);
@@ -161,35 +160,6 @@ export function DailyGameClient({ date, initialState, rankings: initialRankings 
           <Keyboard onKey={() => {}} keyStatus={keyStatus} disabled />
         </div>
       )}
-
-      <div className="shrink-0 w-full max-w-md mt-4">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">
-          Today&apos;s rankings
-        </h3>
-        {initialRankings.length === 0 ? (
-          <p className="text-sm text-[var(--text-muted)]">No one has solved it yet. Be the first!</p>
-        ) : (
-          <ul className="rounded-xl bg-[var(--surface)]/80 border border-[var(--border)] divide-y divide-[var(--border)] overflow-hidden">
-            {initialRankings.slice(0, 10).map((entry) => (
-              <li
-                key={entry.userId}
-                className={`flex items-center gap-3 px-4 py-2 text-sm ${
-                  entry.isCurrentUser ? "bg-[var(--accent)]/10 border-l-2 border-[var(--accent)]" : ""
-                }`}
-              >
-                <span className={`w-6 text-center font-bold ${entry.rank <= 3 ? "text-amber-400" : "text-[var(--text-muted)]"}`}>
-                  {entry.rank}
-                </span>
-                <span className="flex-1 truncate font-medium text-white">
-                  {entry.displayName}
-                  {entry.isCurrentUser && <span className="ml-1 text-[var(--accent)] text-xs">(you)</span>}
-                </span>
-                <span className="tabular-nums text-[var(--correct)]">{entry.attempts} tries</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
     </div>
   );
 }
