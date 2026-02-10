@@ -56,12 +56,12 @@ export function GameGrid({
                   ${staggerClass}
                   ${
                     status === "correct"
-                      ? "tile-correct text-white border-[#538d4e]"
+                      ? "tile-correct text-white border-[var(--correct)]"
                       : status === "present"
-                        ? "tile-present text-white border-[#b59f3b]"
+                        ? "tile-present text-white border-[var(--present)]"
                         : status === "absent"
-                          ? "tile-absent text-white border-[#3a3a3c]"
-                          : "bg-[#121213] border-[#3a3a3c] text-white"
+                          ? "tile-absent text-white border-[var(--border)]"
+                          : "bg-[var(--surface)] border-[var(--border)] text-white"
                   }
                 `}
               >

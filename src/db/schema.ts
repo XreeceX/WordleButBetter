@@ -140,6 +140,9 @@ export const gameSessions = pgTable(
     state: text("state").notNull().default("playing"), // playing | won | lost
     guessHistory: text("guess_history"), // JSON string[] of guesses
     evaluationHistory: text("evaluation_history"), // JSON array of LetterStatus[]
+    hintsUsed: integer("hints_used").notNull().default(0), // letter hints used (max 4)
+    hintPositions: text("hint_positions"), // JSON number[] of revealed positions
+    powerHintUsed: integer("power_hint_used").notNull().default(0), // 0 or 1
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
   },

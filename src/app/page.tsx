@@ -24,12 +24,12 @@ export default async function HomePage() {
 
   return (
     <SessionProvider>
-      <div className="min-h-screen flex flex-col bg-[#121213]">
-        <header className="border-b border-[#3a3a3c] bg-[#1a1a1b]/80 backdrop-blur-sm px-4 py-3.5 flex items-center justify-between">
-          <h1 className="text-xl font-bold tracking-tight text-white">Wordle But Better</h1>
+      <div className="min-h-screen flex flex-col bg-[var(--background)]">
+        <header className="border-b border-[var(--border)] bg-[var(--surface)]/90 backdrop-blur-md px-4 py-3.5 flex items-center justify-between shadow-lg shadow-black/20">
+          <h1 className="text-xl font-bold tracking-tight text-white drop-shadow-sm">Wordle But Better</h1>
           <div className="flex items-center gap-4">
             {stats && (
-              <div className="hidden sm:flex gap-5 text-sm text-[#86888a]">
+              <div className="hidden sm:flex gap-5 text-sm text-[var(--text-muted)]">
                 <span className="tabular-nums">Played: {stats.gamesPlayed}</span>
                 <span className="tabular-nums">Solved: {stats.wordsSolved}</span>
                 <span className="tabular-nums">Streak: {stats.currentStreak}</span>
@@ -38,7 +38,7 @@ export default async function HomePage() {
             )}
             <Link
               href="/api/auth/signout"
-              className="text-sm text-[#86888a] hover:text-white transition-colors rounded px-2 py-1 -m-1"
+              className="text-sm text-[var(--text-muted)] hover:text-white transition-colors rounded-lg px-2 py-1 -m-1"
             >
               Sign out
             </Link>

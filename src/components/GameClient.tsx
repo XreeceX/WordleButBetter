@@ -10,6 +10,8 @@ import {
   startNextLevel,
   getRevealWord,
   hasUnsolvedWordsLeft,
+  useLetterHint,
+  getPowerHint,
 } from "@/actions/game";
 
 type Props = {
@@ -32,8 +34,14 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
   const [animatingRow, setAnimatingRow] = useState<number | null>(null);
   const [shakeRow, setShakeRow] = useState<number | null>(null);
   const [hasMoreWords, setHasMoreWords] = useState(initialHasMore);
+  const [hintsUsed, setHintsUsed] = useState(initialState.hintsUsed);
+  const [powerHintUsed, setPowerHintUsed] = useState(initialState.powerHintUsed);
+  const [letterHintResult, setLetterHintResult] = useState<{ letter: string; position: number } | null>(null);
+  const [powerHintText, setPowerHintText] = useState<string | null>(null);
+  const [hintLoading, setHintLoading] = useState(false);
 
   const currentRow = attempts.length;
+  const letterHintsLeft = 4 - hintsUsed;
 
   const handleKey = useCallback(
     (key: string) => {
@@ -112,10 +120,43 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
       setState("playing");
       setRevealedWord(null);
       setMessage(null);
+      setHintsUsed(next.hintsUsed);
+      setPowerHintUsed(next.powerHintUsed);
+      setLetterHintResult(null);
+      setPowerHintText(null);
       const more = await hasUnsolvedWordsLeft();
       setHasMoreWords(more);
     } else {
       setHasMoreWords(false);
+    }
+  }
+
+  async function handleLetterHint() {
+    if (hintLoading || letterHintsLeft <= 0) return;
+    setHintLoading(true);
+    setMessage(null);
+    setLetterHintResult(null);
+    const result = await useLetterHint(sessionId);
+    setHintLoading(false);
+    if (result.ok) {
+      setHintsUsed((n) => n + 1);
+      setLetterHintResult({ letter: result.letter, position: result.position });
+    } else {
+      setMessage(result.error);
+    }
+  }
+
+  async function handlePowerHint() {
+    if (hintLoading || powerHintUsed) return;
+    setHintLoading(true);
+    setMessage(null);
+    const result = await getPowerHint(sessionId);
+    setHintLoading(false);
+    if (result.ok) {
+      setPowerHintUsed(true);
+      setPowerHintText(result.hint);
+    } else {
+      setMessage(result.error);
     }
   }
 
@@ -134,32 +175,63 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
         shakeRow={shakeRow}
       />
 
+      {letterHintResult && (
+        <p className="mt-4 px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm font-medium animate-pop">
+          Letter at position {letterHintResult.position}: <span className="font-bold text-emerald-200">{letterHintResult.letter.toUpperCase()}</span>
+        </p>
+      )}
+      {powerHintText && (
+        <p className="mt-3 px-4 py-3 rounded-xl bg-violet-500/10 border border-violet-500/30 text-violet-200 text-sm italic max-w-md animate-pop">
+          &ldquo;{powerHintText}&rdquo;
+        </p>
+      )}
       {message && (
-        <p className="mt-4 px-4 py-2 rounded-lg bg-[#2a2a2c] border border-[#3a3a3c] text-[#e8c547] text-sm font-medium animate-pop inline-block">
+        <p className="mt-4 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm font-medium animate-pop inline-block">
           {message}
         </p>
       )}
 
+      {state === "playing" && (
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={handleLetterHint}
+            disabled={hintLoading || letterHintsLeft <= 0}
+            className="px-4 py-2 rounded-xl font-medium text-sm bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all active:scale-95 shadow-md shadow-emerald-900/30"
+          >
+            💡 Hint ({letterHintsLeft} left)
+          </button>
+          <button
+            type="button"
+            onClick={handlePowerHint}
+            disabled={hintLoading || powerHintUsed}
+            className="px-4 py-2 rounded-xl font-medium text-sm bg-violet-600 hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all active:scale-95 shadow-md shadow-violet-900/30"
+          >
+            {powerHintUsed ? "Power hint used" : "✨ Power hint"}
+          </button>
+        </div>
+      )}
+
       {state === "won" && (
         <div className="mt-8 text-center space-y-5">
-          <p className="text-2xl font-bold text-[#538d4e]">You got it!</p>
+          <p className="text-2xl font-bold text-[var(--correct)] drop-shadow-[0_0_12px_var(--correct-glow)]">You got it!</p>
           {hasMoreWords ? (
             <button
               type="button"
               onClick={handleNextLevel}
-              className="px-7 py-3 rounded-lg font-semibold bg-[#538d4e] text-white hover:bg-[#4a7d45] active:scale-[0.98] transition-all shadow-lg shadow-[#538d4e]/20"
+              className="px-7 py-3 rounded-xl font-semibold bg-[var(--correct)] text-white hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-[var(--correct-glow)]"
             >
               Next word
             </button>
           ) : (
-            <p className="text-[#86888a]">You&apos;ve solved all available words.</p>
+            <p className="text-[var(--text-muted)]">You&apos;ve solved all available words.</p>
           )}
         </div>
       )}
 
       {state === "lost" && (
         <div className="mt-8 text-center space-y-5">
-          <p className="text-xl font-bold text-[#86888a]">Better luck next time</p>
+          <p className="text-xl font-bold text-[var(--text-muted)]">Better luck next time</p>
           {revealedWord && (
             <p className="text-lg">
               The word was: <span className="font-bold text-white">{revealedWord}</span>
@@ -169,12 +241,12 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
             <button
               type="button"
               onClick={handleNextLevel}
-              className="px-7 py-3 rounded-lg font-semibold bg-[#538d4e] text-white hover:bg-[#4a7d45] active:scale-[0.98] transition-all shadow-lg shadow-[#538d4e]/20"
+              className="px-7 py-3 rounded-xl font-semibold bg-[var(--correct)] text-white hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-[var(--correct-glow)]"
             >
               Next word
             </button>
           ) : (
-            <p className="text-[#86888a]">No more words left to play.</p>
+            <p className="text-[var(--text-muted)]">No more words left to play.</p>
           )}
         </div>
       )}

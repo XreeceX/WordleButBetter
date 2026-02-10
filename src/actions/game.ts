@@ -23,6 +23,8 @@ export type GameState = {
   evaluations: Array<Array<"correct" | "present" | "absent">>;
   state: "playing" | "won" | "lost";
   maxAttempts: number;
+  hintsUsed: number;
+  powerHintUsed: boolean;
 };
 
 /** Get random length 5–7 for this level. */
@@ -98,6 +100,8 @@ export async function getOrCreateGameState(): Promise<GameState | null> {
       evaluations,
       state: s.state as "playing" | "won" | "lost",
       maxAttempts: s.maxAttempts,
+      hintsUsed: s.hintsUsed ?? 0,
+      powerHintUsed: (s.powerHintUsed ?? 0) === 1,
     };
   }
 
@@ -126,6 +130,8 @@ export async function getOrCreateGameState(): Promise<GameState | null> {
     evaluations: [],
     state: "playing",
     maxAttempts: 6,
+    hintsUsed: 0,
+    powerHintUsed: false,
   };
 }
 
@@ -316,7 +322,147 @@ export async function startNextLevel(): Promise<GameState | null> {
     evaluations: [],
     state: "playing",
     maxAttempts: 6,
+    hintsUsed: 0,
+    powerHintUsed: false,
   };
+}
+
+const HINT_MAX = 4;
+
+/** Use a letter hint: reveals one random letter and its position (1-based). Max 4 per game. */
+export async function useLetterHint(
+  sessionId: string
+): Promise<
+  | { ok: true; letter: string; position: number }
+  | { ok: false; error: string }
+> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return { ok: false, error: "Not authenticated" };
+
+  const [game] = await db
+    .select()
+    .from(gameSessions)
+    .where(
+      and(
+        eq(gameSessions.id, sessionId),
+        eq(gameSessions.userId, userId)
+      )
+    )
+    .limit(1);
+
+  if (!game || game.state !== "playing")
+    return { ok: false, error: "No active game" };
+
+  const hintsUsed = game.hintsUsed ?? 0;
+  if (hintsUsed >= HINT_MAX)
+    return { ok: false, error: `No hints left (${HINT_MAX} max)` };
+
+  const [wordRow] = await db
+    .select({ word: words.word })
+    .from(words)
+    .where(eq(words.id, game.wordId))
+    .limit(1);
+  if (!wordRow) return { ok: false, error: "Word not found" };
+
+  const target = wordRow.word;
+  const wordLength = target.length;
+  const hintPositions: number[] = game.hintPositions ? JSON.parse(game.hintPositions) : [];
+  const available = Array.from({ length: wordLength }, (_, i) => i).filter((i) => !hintPositions.includes(i));
+  if (available.length === 0)
+    return { ok: false, error: "All positions already revealed" };
+
+  const pos = available[Math.floor(Math.random() * available.length)];
+  const letter = target[pos];
+  const newPositions = [...hintPositions, pos];
+
+  await db
+    .update(gameSessions)
+    .set({
+      hintsUsed: hintsUsed + 1,
+      hintPositions: JSON.stringify(newPositions),
+      updatedAt: new Date(),
+    })
+    .where(eq(gameSessions.id, sessionId));
+
+  return { ok: true, letter, position: pos + 1 };
+}
+
+/** Get power hint: one per game, returns a cryptic meaning hint via Groq. */
+export async function getPowerHint(
+  sessionId: string
+): Promise<{ ok: true; hint: string } | { ok: false; error: string }> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return { ok: false, error: "Not authenticated" };
+
+  const [game] = await db
+    .select()
+    .from(gameSessions)
+    .where(
+      and(
+        eq(gameSessions.id, sessionId),
+        eq(gameSessions.userId, userId)
+      )
+    )
+    .limit(1);
+
+  if (!game || game.state !== "playing")
+    return { ok: false, error: "No active game" };
+
+  if ((game.powerHintUsed ?? 0) === 1)
+    return { ok: false, error: "Power hint already used this game" };
+
+  const [wordRow] = await db
+    .select({ word: words.word })
+    .from(words)
+    .where(eq(words.id, game.wordId))
+    .limit(1);
+  if (!wordRow) return { ok: false, error: "Word not found" };
+
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) return { ok: false, error: "Power hint not configured" };
+
+  const hint = await fetchMeaningHint(wordRow.word, apiKey);
+  if (!hint) return { ok: false, error: "Could not get hint" };
+
+  await db
+    .update(gameSessions)
+    .set({
+      powerHintUsed: 1,
+      updatedAt: new Date(),
+    })
+    .where(eq(gameSessions.id, sessionId));
+
+  return { ok: true, hint };
+}
+
+async function fetchMeaningHint(word: string, apiKey: string): Promise<string | null> {
+  try {
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-8b-instant",
+        messages: [
+          {
+            role: "user",
+            content: `Give a single brief cryptic hint about what the word "${word}" means (for a word-guessing game). Do not say the word or spell any letters. One short sentence only.`,
+          },
+        ],
+        max_tokens: 60,
+        temperature: 0.7,
+      }),
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
+    return data.choices?.[0]?.message?.content?.trim() ?? null;
+  } catch {
+    return null;
+  }
 }
 
 /** Check if user has any unsolved words left (for "all solved" state). */

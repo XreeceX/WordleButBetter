@@ -18,16 +18,16 @@ export function Keyboard({ onKey, keyStatus, disabled }: Props) {
   const keyClass = (key: string) => {
     const status = keyStatus[key];
     const base =
-      "min-w-[2rem] h-12 sm:h-14 rounded-md font-medium text-sm uppercase transition-all duration-150 flex items-center justify-center select-none active:scale-95";
-    if (disabled) return `${base} bg-[#3a3a3c] text-[#86888a] cursor-not-allowed`;
-    if (status === "correct") return `${base} bg-[#538d4e] text-white hover:bg-[#4a7d45] cursor-pointer`;
-    if (status === "present") return `${base} bg-[#b59f3b] text-white hover:bg-[#a08d34] cursor-pointer`;
-    if (status === "absent") return `${base} bg-[#3a3a3c] text-[#86888a] cursor-not-allowed`;
-    return `${base} bg-[#818384] text-white hover:bg-[#6b6b6d] cursor-pointer`;
+      "min-w-[2rem] h-12 sm:h-14 rounded-xl font-medium text-sm uppercase transition-all duration-150 flex items-center justify-center select-none active:scale-95";
+    if (disabled) return `${base} bg-[var(--absent)] text-[var(--text-muted)] cursor-not-allowed`;
+    if (status === "correct") return `${base} bg-[var(--correct)] text-white hover:opacity-90 cursor-pointer shadow-sm shadow-[var(--correct-glow)]`;
+    if (status === "present") return `${base} bg-[var(--present)] text-white hover:opacity-90 cursor-pointer shadow-sm shadow-[var(--present-glow)]`;
+    if (status === "absent") return `${base} bg-[var(--absent)] text-[var(--text-muted)] cursor-not-allowed`;
+    return `${base} bg-[var(--key-bg)] text-white hover:bg-[#52525b] cursor-pointer`;
   };
 
   const specialKeyClass =
-    "min-w-[2.5rem] h-12 sm:h-14 px-3 rounded-md font-medium text-sm bg-[#818384] text-white hover:bg-[#6b6b6d] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-150 active:scale-95";
+    "min-w-[2.5rem] h-12 sm:h-14 px-3 rounded-xl font-medium text-sm bg-[var(--key-bg)] text-white hover:bg-[#52525b] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-150 active:scale-95";
 
   return (
     <div className="w-full max-w-lg mx-auto mt-8 space-y-2 px-2">
