@@ -208,7 +208,7 @@ export async function getDailyPowerHint(
     return { ok: false, error: "No active daily game" };
 
   if ((daily.powerHintUsed ?? 0) === 1)
-    return { ok: false, error: "Power hint already used today" };
+    return { ok: false, error: "Hint already used today" };
 
   const [wordRow] = await db
     .select({ word: words.word })
@@ -218,7 +218,7 @@ export async function getDailyPowerHint(
   if (!wordRow) return { ok: false, error: "Word not found" };
 
   const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) return { ok: false, error: "Power hint not configured" };
+  if (!apiKey) return { ok: false, error: "Hint not configured" };
 
   const hint = await fetchMeaningHint(wordRow.word, apiKey);
   if (!hint) return { ok: false, error: "Could not get hint" };

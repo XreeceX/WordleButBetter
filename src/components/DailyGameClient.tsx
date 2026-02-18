@@ -55,7 +55,7 @@ export function DailyGameClient({ date, initialState }: Props) {
           setEvaluations((p) => [...p, result.evaluation]);
           setCurrentGuess("");
           setState(result.state);
-          const delay = wordLength * 80 + 500;
+          const delay = 650 + wordLength * 65;
           setTimeout(() => setAnimatingRow(null), delay);
           if (result.state === "won") {
             router.refresh();
@@ -149,7 +149,7 @@ export function DailyGameClient({ date, initialState }: Props) {
             disabled={hintLoading || powerHintUsed}
             className="px-4 py-2 rounded-xl font-medium text-sm bg-violet-600 hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all active:scale-95 shadow-md shadow-violet-900/30"
           >
-            {powerHintUsed ? "Power hint used" : "✨ Power hint"}
+            {powerHintUsed ? "Hint used" : "✨ Hint"}
           </button>
         </div>
       )}

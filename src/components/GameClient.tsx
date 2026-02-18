@@ -10,7 +10,6 @@ import {
   startNextLevel,
   getRevealWord,
   hasUnsolvedWordsLeft,
-  requestLetterHint,
   getPowerHint,
 } from "@/actions/game";
 
@@ -34,14 +33,11 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
   const [animatingRow, setAnimatingRow] = useState<number | null>(null);
   const [shakeRow, setShakeRow] = useState<number | null>(null);
   const [hasMoreWords, setHasMoreWords] = useState(initialHasMore);
-  const [hintsUsed, setHintsUsed] = useState(initialState.hintsUsed);
   const [powerHintUsed, setPowerHintUsed] = useState(initialState.powerHintUsed);
-  const [letterHintResult, setLetterHintResult] = useState<{ letter: string; position: number } | null>(null);
   const [powerHintText, setPowerHintText] = useState<string | null>(null);
   const [hintLoading, setHintLoading] = useState(false);
 
   const currentRow = attempts.length;
-  const letterHintsLeft = 4 - hintsUsed;
 
   const handleKey = useCallback(
     (key: string) => {
@@ -65,7 +61,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
           setCurrentGuess("");
           setState(result.state);
           // Clear animating state after stagger + flip duration (~900ms for 6 tiles)
-          const delay = wordLength * 80 + 500;
+          const delay = 650 + wordLength * 65;
           setTimeout(() => setAnimatingRow(null), delay);
         });
         return;
@@ -120,29 +116,12 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
       setState("playing");
       setRevealedWord(null);
       setMessage(null);
-      setHintsUsed(next.hintsUsed);
       setPowerHintUsed(next.powerHintUsed);
-      setLetterHintResult(null);
       setPowerHintText(null);
       const more = await hasUnsolvedWordsLeft();
       setHasMoreWords(more);
     } else {
       setHasMoreWords(false);
-    }
-  }
-
-  async function handleLetterHint() {
-    if (hintLoading || letterHintsLeft <= 0) return;
-    setHintLoading(true);
-    setMessage(null);
-    setLetterHintResult(null);
-    const result = await requestLetterHint(sessionId);
-    setHintLoading(false);
-    if (result.ok) {
-      setHintsUsed((n) => n + 1);
-      setLetterHintResult({ letter: result.letter, position: result.position });
-    } else {
-      setMessage(result.error);
     }
   }
 
@@ -175,11 +154,6 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
         shakeRow={shakeRow}
       />
 
-      {letterHintResult && (
-        <p className="shrink-0 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm font-medium animate-pop">
-          Letter at position {letterHintResult.position}: <span className="font-bold text-emerald-200">{letterHintResult.letter.toUpperCase()}</span>
-        </p>
-      )}
       {powerHintText && (
         <p className="shrink-0 px-3 py-2 rounded-xl bg-violet-500/10 border border-violet-500/30 text-violet-200 text-sm italic max-w-md animate-pop">
           &ldquo;{powerHintText}&rdquo;
@@ -195,19 +169,11 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
         <div className="shrink-0 flex flex-wrap items-center justify-center gap-2">
           <button
             type="button"
-            onClick={handleLetterHint}
-            disabled={hintLoading || letterHintsLeft <= 0}
-            className="px-4 py-2 rounded-xl font-medium text-sm bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all active:scale-95 shadow-md shadow-emerald-900/30"
-          >
-            💡 Hint ({letterHintsLeft} left)
-          </button>
-          <button
-            type="button"
             onClick={handlePowerHint}
             disabled={hintLoading || powerHintUsed}
             className="px-4 py-2 rounded-xl font-medium text-sm bg-violet-600 hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all active:scale-95 shadow-md shadow-violet-900/30"
           >
-            {powerHintUsed ? "Power hint used" : "✨ Power hint"}
+            {powerHintUsed ? "Hint used" : "✨ Hint"}
           </button>
         </div>
       )}

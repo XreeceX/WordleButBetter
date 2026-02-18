@@ -104,8 +104,11 @@ body::before {
 
 @keyframes flip-in {
   0% {
-    transform: rotateX(90deg);
-    opacity: 0.6;
+    transform: rotateX(-90deg);
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.4;
   }
   100% {
     transform: rotateX(0deg);
@@ -140,18 +143,26 @@ body::before {
   80% { transform: translateX(4px); }
 }
 
+.game-tile {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
 .animate-flip-in {
-  transform-origin: bottom;
-  animation: flip-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform-origin: bottom center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
+  animation: flip-in 0.6s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
 .animate-flip-in.stagger-0 { animation-delay: 0ms; }
-.animate-flip-in.stagger-1 { animation-delay: 80ms; }
-.animate-flip-in.stagger-2 { animation-delay: 160ms; }
-.animate-flip-in.stagger-3 { animation-delay: 240ms; }
-.animate-flip-in.stagger-4 { animation-delay: 320ms; }
-.animate-flip-in.stagger-5 { animation-delay: 400ms; }
-.animate-flip-in.stagger-6 { animation-delay: 480ms; }
+.animate-flip-in.stagger-1 { animation-delay: 65ms; }
+.animate-flip-in.stagger-2 { animation-delay: 130ms; }
+.animate-flip-in.stagger-3 { animation-delay: 195ms; }
+.animate-flip-in.stagger-4 { animation-delay: 260ms; }
+.animate-flip-in.stagger-5 { animation-delay: 325ms; }
+.animate-flip-in.stagger-6 { animation-delay: 390ms; }
 
 .animate-flip-out {
   animation: flip-out 0.5s ease-in-out forwards;

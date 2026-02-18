@@ -29,13 +29,13 @@ export function GameGrid({
   return (
     <div
       className="flex flex-col mx-auto w-full max-w-xl shrink-0"
-      style={{ perspective: "1000px", gap: "min(0.4rem, 1.2vh)" }}
+      style={{ perspective: "1200px", gap: "min(0.4rem, 1.2vh)" }}
     >
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div
           key={rowIndex}
           className={`flex justify-center ${shakeRow === rowIndex ? "animate-shake" : ""}`}
-          style={{ gap: "min(0.35rem, 1vh)" }}
+          style={{ gap: "min(0.35rem, 1vh)", transformStyle: "preserve-3d" }}
         >
           {Array.from({ length: cols }).map((_, colIndex) => {
             const letter =
