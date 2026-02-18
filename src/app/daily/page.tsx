@@ -79,7 +79,7 @@ export default async function DailyChallengePage() {
             )}
           </div>
         </aside>
-        <main className="flex-1 min-h-0 min-w-0 flex flex-col items-center justify-center order-1 lg:order-2 overflow-y-auto overflow-x-hidden">
+        <main className="flex-1 min-h-0 min-w-0 flex flex-col items-center justify-center order-1 lg:order-2 overflow-y-auto overflow-x-hidden bg-[var(--background)]">
           <DailyGameClient date={today} initialState={dailyState} />
         </main>
       </div>
