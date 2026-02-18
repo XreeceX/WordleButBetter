@@ -83,7 +83,7 @@ export default async function HomePage() {
           <aside className="flex-shrink-0 order-2 lg:order-1 w-full lg:w-56 overflow-auto">
             <Leaderboard entries={leaderboardEntries} currentUserId={session.user.id} />
           </aside>
-          <main className="flex-1 min-h-0 min-w-0 flex flex-col items-center justify-center order-1 lg:order-2 overflow-y-auto overflow-x-hidden bg-[var(--background)]">
+          <main className="flex-1 min-h-0 min-w-0 flex flex-col items-center justify-center order-1 lg:order-2 overflow-y-auto overflow-x-hidden">
             {gameState === null && !hasMoreWords ? (
               <div className="text-center max-w-md mx-auto space-y-4 py-12">
                 <h2 className="text-2xl font-bold">You&apos;ve solved all available words!</h2>
