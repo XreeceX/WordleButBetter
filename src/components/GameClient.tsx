@@ -61,7 +61,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
           setCurrentGuess("");
           setState(result.state);
           // Clear animating state after stagger + flip duration (~900ms for 6 tiles)
-          const delay = 650 + wordLength * 65;
+          const delay = 700 + wordLength * 70;
           setTimeout(() => setAnimatingRow(null), delay);
         });
         return;

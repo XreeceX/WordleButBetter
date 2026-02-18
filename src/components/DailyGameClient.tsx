@@ -55,7 +55,7 @@ export function DailyGameClient({ date, initialState }: Props) {
           setEvaluations((p) => [...p, result.evaluation]);
           setCurrentGuess("");
           setState(result.state);
-          const delay = 650 + wordLength * 65;
+          const delay = 700 + wordLength * 70;
           setTimeout(() => setAnimatingRow(null), delay);
           if (result.state === "won") {
             router.refresh();

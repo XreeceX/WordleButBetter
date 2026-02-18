@@ -26,9 +26,17 @@ export function GameGrid({
   const rows = maxAttempts;
   const cols = wordLength;
 
+  const animatingEvaluation = animatingRow !== null && evaluations[animatingRow] ? evaluations[animatingRow] : [];
+  const correctCountInAnimatingRow = animatingEvaluation.filter((s) => s === "correct").length;
+  const boardShakeClass =
+    animatingRow !== null && correctCountInAnimatingRow > 0
+      ? `board-shake-${Math.min(correctCountInAnimatingRow, 7)}`
+      : "";
+
   return (
     <div
-      className="flex flex-col mx-auto w-full max-w-xl shrink-0"
+      key={animatingRow !== null ? `animate-${animatingRow}-${attempts.length}` : "idle"}
+      className={`flex flex-col mx-auto w-full max-w-xl shrink-0 ${boardShakeClass}`}
       style={{ perspective: "1200px", gap: "min(0.4rem, 1.2vh)" }}
     >
       {Array.from({ length: rows }).map((_, rowIndex) => (
@@ -46,14 +54,20 @@ export function GameGrid({
                   : "";
             const status: LetterStatus | null =
               rowIndex < evaluations.length ? evaluations[rowIndex][colIndex] ?? null : null;
-            const staggerClass = animatingRow === rowIndex && status ? `animate-flip-in stagger-${colIndex}` : "";
+            const isAnimatingThisRow = animatingRow === rowIndex && status;
+            const flipClass =
+              isAnimatingThisRow
+                ? status === "correct"
+                  ? `animate-flip-in-card-correct stagger-${colIndex}`
+                  : `animate-flip-in-card stagger-${colIndex}`
+                : "";
 
             return (
               <div
                 key={colIndex}
                 className={`
                   flex items-center justify-center font-bold uppercase border-2 rounded-lg
-                  transition-all duration-150 game-tile ${staggerClass}
+                  transition-all duration-150 game-tile ${flipClass}
                   ${
                     status === "correct"
                       ? "tile-correct text-white border-[var(--correct)]"
