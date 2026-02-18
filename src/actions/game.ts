@@ -23,6 +23,7 @@ export type GameState = {
   maxAttempts: number;
   hintsUsed: number;
   powerHintUsed: boolean;
+  powerHintText: string | null;
 };
 
 /** Allowed lengths by progress: 5 only <500 solved, +6 at 500, +7 at 800. Pool gives 1/2, 1/4, 1/4. */
@@ -100,6 +101,7 @@ export async function getOrCreateGameState(): Promise<GameState | null> {
       maxAttempts: s.maxAttempts,
       hintsUsed: s.hintsUsed ?? 0,
       powerHintUsed: (s.powerHintUsed ?? 0) === 1,
+      powerHintText: s.powerHintText ?? null,
     };
   }
 
@@ -141,6 +143,7 @@ export async function getOrCreateGameState(): Promise<GameState | null> {
     maxAttempts: 6,
     hintsUsed: 0,
     powerHintUsed: false,
+    powerHintText: null,
   };
 }
 
@@ -344,6 +347,7 @@ export async function startNextLevel(): Promise<GameState | null> {
     maxAttempts: 6,
     hintsUsed: 0,
     powerHintUsed: false,
+    powerHintText: null,
   };
 }
 
@@ -460,6 +464,7 @@ export async function getPowerHint(
     .update(gameSessions)
     .set({
       powerHintUsed: 1,
+      powerHintText: hint,
       updatedAt: new Date(),
     })
     .where(eq(gameSessions.id, sessionId));

@@ -19,6 +19,7 @@ export type DailyGameState = {
   maxAttempts: number;
   hintsUsed: number;
   powerHintUsed: boolean;
+  powerHintText: string | null;
 };
 
 export type DailyRankEntry = {
@@ -86,6 +87,7 @@ export async function getOrCreateDailyState(
       maxAttempts: s.maxAttempts,
       hintsUsed: s.hintsUsed ?? 0,
       powerHintUsed: (s.powerHintUsed ?? 0) === 1,
+      powerHintText: s.powerHintText ?? null,
     };
   }
 
@@ -107,6 +109,7 @@ export async function getOrCreateDailyState(
     maxAttempts: 6,
     hintsUsed: 0,
     powerHintUsed: false,
+    powerHintText: null,
   };
 }
 
@@ -227,6 +230,7 @@ export async function getDailyPowerHint(
     .update(dailySessions)
     .set({
       powerHintUsed: 1,
+      powerHintText: hint,
       updatedAt: new Date(),
     })
     .where(

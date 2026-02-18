@@ -34,7 +34,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
   const [shakeRow, setShakeRow] = useState<number | null>(null);
   const [hasMoreWords, setHasMoreWords] = useState(initialHasMore);
   const [powerHintUsed, setPowerHintUsed] = useState(initialState.powerHintUsed);
-  const [powerHintText, setPowerHintText] = useState<string | null>(null);
+  const [powerHintText, setPowerHintText] = useState<string | null>(initialState.powerHintText ?? null);
   const [hintLoading, setHintLoading] = useState(false);
 
   const currentRow = attempts.length;

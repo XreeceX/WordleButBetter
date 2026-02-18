@@ -29,7 +29,7 @@ export function DailyGameClient({ date, initialState }: Props) {
   const [animatingRow, setAnimatingRow] = useState<number | null>(null);
   const [shakeRow, setShakeRow] = useState<number | null>(null);
   const [powerHintUsed, setPowerHintUsed] = useState(initialState.powerHintUsed);
-  const [powerHintText, setPowerHintText] = useState<string | null>(null);
+  const [powerHintText, setPowerHintText] = useState<string | null>(initialState.powerHintText ?? null);
   const [hintLoading, setHintLoading] = useState(false);
 
   const currentRow = attempts.length;

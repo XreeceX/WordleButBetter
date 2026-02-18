@@ -143,6 +143,7 @@ export const gameSessions = pgTable(
     hintsUsed: integer("hints_used").notNull().default(0), // letter hints used (max 4)
     hintPositions: text("hint_positions"), // JSON number[] of revealed positions
     powerHintUsed: integer("power_hint_used").notNull().default(0), // 0 or 1
+    powerHintText: text("power_hint_text"), // stored so it persists across sessions
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
   },
@@ -171,6 +172,7 @@ export const dailySessions = pgTable(
     hintsUsed: integer("hints_used").notNull().default(0),
     hintPositions: text("hint_positions"),
     powerHintUsed: integer("power_hint_used").notNull().default(0),
+    powerHintText: text("power_hint_text"),
     completedAt: timestamp("completed_at", { mode: "date" }),
     updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
   },
