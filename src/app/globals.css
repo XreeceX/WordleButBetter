@@ -198,66 +198,80 @@ body::before {
 .animate-flip-in-card-correct.stagger-6 { animation-delay: 0ms; }
 
 /* Board shake intensity: more correct letters = stronger vibration */
+/* Use translate3d for GPU acceleration and smoother rendering without visual artifacts */
 @keyframes board-shake-1 {
-  0%, 100% { transform: translate(0, 0); }
-  25% { transform: translate(-1px, 0); }
-  75% { transform: translate(1px, 0); }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(-1px, 0, 0); }
+  75% { transform: translate3d(1px, 0, 0); }
 }
 @keyframes board-shake-2 {
-  0%, 100% { transform: translate(0, 0); }
-  20% { transform: translate(-2px, -1px); }
-  40% { transform: translate(2px, 1px); }
-  60% { transform: translate(-2px, 1px); }
-  80% { transform: translate(2px, -1px); }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  20% { transform: translate3d(-2px, -1px, 0); }
+  40% { transform: translate3d(2px, 1px, 0); }
+  60% { transform: translate3d(-2px, 1px, 0); }
+  80% { transform: translate3d(2px, -1px, 0); }
 }
 @keyframes board-shake-3 {
-  0%, 100% { transform: translate(0, 0); }
-  15% { transform: translate(-3px, -2px); }
-  35% { transform: translate(3px, 2px); }
-  50% { transform: translate(-3px, 2px); }
-  70% { transform: translate(3px, -2px); }
-  85% { transform: translate(-2px, 0); }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  15% { transform: translate3d(-3px, -2px, 0); }
+  35% { transform: translate3d(3px, 2px, 0); }
+  50% { transform: translate3d(-3px, 2px, 0); }
+  70% { transform: translate3d(3px, -2px, 0); }
+  85% { transform: translate3d(-2px, 0, 0); }
 }
 @keyframes board-shake-4 {
-  0%, 100% { transform: translate(0, 0); }
-  12% { transform: translate(-4px, -2px); }
-  30% { transform: translate(4px, 2px); }
-  45% { transform: translate(-4px, 2px); }
-  62% { transform: translate(4px, -2px); }
-  78% { transform: translate(-3px, 1px); }
-  92% { transform: translate(3px, -1px); }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  12% { transform: translate3d(-4px, -2px, 0); }
+  30% { transform: translate3d(4px, 2px, 0); }
+  45% { transform: translate3d(-4px, 2px, 0); }
+  62% { transform: translate3d(4px, -2px, 0); }
+  78% { transform: translate3d(-3px, 1px, 0); }
+  92% { transform: translate3d(3px, -1px, 0); }
 }
 @keyframes board-shake-5 {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-5px, -3px); }
-  25% { transform: translate(5px, 3px); }
-  40% { transform: translate(-5px, 3px); }
-  55% { transform: translate(5px, -3px); }
-  70% { transform: translate(-4px, 2px); }
-  85% { transform: translate(4px, -2px); }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  10% { transform: translate3d(-5px, -3px, 0); }
+  25% { transform: translate3d(5px, 3px, 0); }
+  40% { transform: translate3d(-5px, 3px, 0); }
+  55% { transform: translate3d(5px, -3px, 0); }
+  70% { transform: translate3d(-4px, 2px, 0); }
+  85% { transform: translate3d(4px, -2px, 0); }
 }
 @keyframes board-shake-6 {
-  0%, 100% { transform: translate(0, 0); }
-  8% { transform: translate(-6px, -3px); }
-  22% { transform: translate(6px, 3px); }
-  36% { transform: translate(-6px, 3px); }
-  50% { transform: translate(6px, -3px); }
-  64% { transform: translate(-5px, 2px); }
-  78% { transform: translate(5px, -2px); }
-  92% { transform: translate(-3px, 1px); }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  8% { transform: translate3d(-6px, -3px, 0); }
+  22% { transform: translate3d(6px, 3px, 0); }
+  36% { transform: translate3d(-6px, 3px, 0); }
+  50% { transform: translate3d(6px, -3px, 0); }
+  64% { transform: translate3d(-5px, 2px, 0); }
+  78% { transform: translate3d(5px, -2px, 0); }
+  92% { transform: translate3d(-3px, 1px, 0); }
 }
 @keyframes board-shake-7 {
-  0%, 100% { transform: translate(0, 0); }
-  7% { transform: translate(-7px, -4px); }
-  20% { transform: translate(7px, 4px); }
-  33% { transform: translate(-7px, 4px); }
-  46% { transform: translate(7px, -4px); }
-  60% { transform: translate(-6px, 3px); }
-  73% { transform: translate(6px, -3px); }
-  87% { transform: translate(-4px, 2px); }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  7% { transform: translate3d(-7px, -4px, 0); }
+  20% { transform: translate3d(7px, 4px, 0); }
+  33% { transform: translate3d(-7px, 4px, 0); }
+  46% { transform: translate3d(7px, -4px, 0); }
+  60% { transform: translate3d(-6px, 3px, 0); }
+  73% { transform: translate3d(6px, -3px, 0); }
+  87% { transform: translate3d(-4px, 2px, 0); }
 }
 
 /* Delay shake to start when correct tile(s) do their impact pop (~80% through 0.65s flip) */
+.board-shake-1,
+.board-shake-2,
+.board-shake-3,
+.board-shake-4,
+.board-shake-5,
+.board-shake-6,
+.board-shake-7 {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  outline: none !important;
+}
+
 .board-shake-1 { animation: board-shake-1 0.5s ease-out 0.52s both; }
 .board-shake-2 { animation: board-shake-2 0.55s ease-out 0.52s both; }
 .board-shake-3 { animation: board-shake-3 0.6s ease-out 0.52s both; }
