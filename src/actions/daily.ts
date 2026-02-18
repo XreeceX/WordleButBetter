@@ -244,6 +244,59 @@ export async function getDailyPowerHint(
   return { ok: true, hint };
 }
 
+/** Get stored daily hint text, or backfill from Groq if hint was used but text was never saved. */
+export async function getOrBackfillDailyPowerHintText(
+  date: string
+): Promise<{ hint: string } | { hint: null }> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return { hint: null };
+
+  const [daily] = await db
+    .select({
+      powerHintUsed: dailySessions.powerHintUsed,
+      powerHintText: dailySessions.powerHintText,
+      wordId: dailySessions.wordId,
+    })
+    .from(dailySessions)
+    .where(
+      and(
+        eq(dailySessions.userId, userId),
+        eq(dailySessions.date, date)
+      )
+    )
+    .limit(1);
+
+  if (!daily || (daily.powerHintUsed ?? 0) !== 1) return { hint: null };
+  if (daily.powerHintText) return { hint: daily.powerHintText };
+
+  const [wordRow] = await db
+    .select({ word: words.word })
+    .from(words)
+    .where(eq(words.id, daily.wordId))
+    .limit(1);
+  if (!wordRow) return { hint: null };
+
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) return { hint: null };
+
+  const hint = await fetchMeaningHint(wordRow.word, apiKey);
+  if (!hint) return { hint: null };
+
+  await db
+    .update(dailySessions)
+    .set({ powerHintText: hint, updatedAt: new Date() })
+    .where(
+      and(
+        eq(dailySessions.userId, userId),
+        eq(dailySessions.date, date)
+      )
+    );
+
+  revalidatePath("/daily");
+  return { hint };
+}
+
 /** Get the target word for daily (after game ended). */
 export async function getDailyRevealWord(date: string): Promise<string | null> {
   const session = await auth();

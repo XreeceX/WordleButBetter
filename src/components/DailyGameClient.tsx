@@ -7,7 +7,7 @@ import { GameGrid } from "./GameGrid";
 import { Keyboard, getKeyStatusFromEvaluations } from "./Keyboard";
 import type { DailyGameState } from "@/actions/daily";
 import type { LetterStatus } from "@/lib/game";
-import { submitDailyGuess, getDailyRevealWord, getDailyPowerHint } from "@/actions/daily";
+import { submitDailyGuess, getDailyRevealWord, getDailyPowerHint, getOrBackfillDailyPowerHintText } from "@/actions/daily";
 
 type Props = {
   date: string;
@@ -101,6 +101,14 @@ export function DailyGameClient({ date, initialState }: Props) {
       getDailyRevealWord(date).then(setRevealedWord);
     }
   }, [state, date]);
+
+  useEffect(() => {
+    if (state === "playing" && powerHintUsed && !powerHintText) {
+      getOrBackfillDailyPowerHintText(date).then((r) => {
+        if (r.hint) setPowerHintText(r.hint);
+      });
+    }
+  }, [state, powerHintUsed, powerHintText, date]);
 
   const handlePowerHint = useCallback(async () => {
     if (hintLoading || powerHintUsed) return;

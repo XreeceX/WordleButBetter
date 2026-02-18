@@ -472,6 +472,49 @@ export async function getPowerHint(
   return { ok: true, hint };
 }
 
+/** Get stored hint text, or backfill from Groq if hint was used but text was never saved (e.g. before we persisted it). */
+export async function getOrBackfillPowerHintText(
+  sessionId: string
+): Promise<{ hint: string } | { hint: null }> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return { hint: null };
+
+  const [game] = await db
+    .select({ powerHintUsed: gameSessions.powerHintUsed, powerHintText: gameSessions.powerHintText, wordId: gameSessions.wordId })
+    .from(gameSessions)
+    .where(
+      and(
+        eq(gameSessions.id, sessionId),
+        eq(gameSessions.userId, userId)
+      )
+    )
+    .limit(1);
+
+  if (!game || (game.powerHintUsed ?? 0) !== 1) return { hint: null };
+  if (game.powerHintText) return { hint: game.powerHintText };
+
+  const [wordRow] = await db
+    .select({ word: words.word })
+    .from(words)
+    .where(eq(words.id, game.wordId))
+    .limit(1);
+  if (!wordRow) return { hint: null };
+
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) return { hint: null };
+
+  const hint = await fetchMeaningHint(wordRow.word, apiKey);
+  if (!hint) return { hint: null };
+
+  await db
+    .update(gameSessions)
+    .set({ powerHintText: hint, updatedAt: new Date() })
+    .where(eq(gameSessions.id, sessionId));
+
+  return { hint };
+}
+
 export async function fetchMeaningHint(word: string, apiKey: string): Promise<string | null> {
   try {
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {

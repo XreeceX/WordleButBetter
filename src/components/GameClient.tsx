@@ -11,6 +11,7 @@ import {
   getRevealWord,
   hasUnsolvedWordsLeft,
   getPowerHint,
+  getOrBackfillPowerHintText,
 } from "@/actions/game";
 
 type Props = {
@@ -104,6 +105,14 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
       getRevealWord(sessionId).then(setRevealedWord);
     }
   }, [state, sessionId]);
+
+  useEffect(() => {
+    if (state === "playing" && powerHintUsed && !powerHintText) {
+      getOrBackfillPowerHintText(sessionId).then((r) => {
+        if (r.hint) setPowerHintText(r.hint);
+      });
+    }
+  }, [state, powerHintUsed, powerHintText, sessionId]);
 
   async function handleNextLevel() {
     const next = await startNextLevel();
