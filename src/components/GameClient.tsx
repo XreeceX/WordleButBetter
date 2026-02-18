@@ -198,41 +198,45 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
       )}
 
       {state === "won" && (
-        <div className="shrink-0 mt-4 text-center space-y-4">
+        <div className="shrink-0 mt-4 flex items-center justify-between gap-4 w-full max-w-xl px-1">
           <p className="text-2xl font-bold text-[var(--correct)] drop-shadow-[0_0_12px_var(--correct-glow)]">You got it!</p>
           {hasMoreWords ? (
             <button
               type="button"
               onClick={handleNextLevel}
-              className="px-7 py-3 rounded-xl font-semibold bg-[var(--correct)] text-white hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-[var(--correct-glow)]"
+              className="ml-auto px-7 py-3 rounded-xl font-semibold bg-[var(--correct)] text-white hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-[var(--correct-glow)]"
             >
               Next word
             </button>
           ) : (
-            <p className="text-[var(--text-muted)]">You&apos;ve solved all available words.</p>
+            <p className="ml-auto text-[var(--text-muted)]">You&apos;ve solved all available words.</p>
           )}
         </div>
       )}
 
       {state === "lost" && (
-        <div className="shrink-0 mt-4 text-center space-y-4">
-          <p className="text-xl font-bold text-[var(--text-muted)]">Better luck next time</p>
-          {revealedWord && (
-            <p className="text-lg">
-              The word was: <span className="font-bold text-white">{revealedWord}</span>
-            </p>
-          )}
-          {hasMoreWords ? (
-            <button
-              type="button"
-              onClick={handleNextLevel}
-              className="px-7 py-3 rounded-xl font-semibold bg-[var(--correct)] text-white hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-[var(--correct-glow)]"
-            >
-              Next word
-            </button>
-          ) : (
-            <p className="text-[var(--text-muted)]">No more words left to play.</p>
-          )}
+        <div className="shrink-0 mt-4 flex flex-col items-center gap-4 w-full max-w-xl px-1">
+          <div className="w-full flex items-center justify-between gap-4">
+            <div>
+              <p className="text-xl font-bold text-[var(--text-muted)]">Better luck next time</p>
+              {revealedWord && (
+                <p className="text-lg mt-1">
+                  The word was: <span className="font-bold text-white">{revealedWord}</span>
+                </p>
+              )}
+            </div>
+            {hasMoreWords ? (
+              <button
+                type="button"
+                onClick={handleNextLevel}
+                className="shrink-0 px-7 py-3 rounded-xl font-semibold bg-[var(--correct)] text-white hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-[var(--correct-glow)]"
+              >
+                Next word
+              </button>
+            ) : (
+              <p className="shrink-0 text-[var(--text-muted)]">No more words left to play.</p>
+            )}
+          </div>
         </div>
       )}
 
