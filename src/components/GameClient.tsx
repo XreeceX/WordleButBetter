@@ -158,11 +158,12 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
       : "";
 
   return (
-    <div
-      key={animatingRow !== null ? `shake-${animatingRow}-${attempts.length}` : "idle"}
-      className={`flex flex-col items-center min-h-0 w-full py-1 gap-[min(0.5rem,1.5vh)] ${boardShakeClass}`}
-    >
-      <GameGrid
+    <div className="overflow-x-hidden w-full relative z-[1]" style={{ background: "var(--background)" }}>
+      <div
+        key={animatingRow !== null ? `shake-${animatingRow}-${attempts.length}` : "idle"}
+        className={`flex flex-col items-center min-h-0 w-full py-1 gap-[min(0.5rem,1.5vh)] ${boardShakeClass}`}
+      >
+        <GameGrid
         wordLength={wordLength}
         maxAttempts={maxAttempts}
         attempts={attempts}
@@ -248,6 +249,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
           <Keyboard onKey={() => {}} keyStatus={keyStatus} disabled />
         </div>
       )}
+      </div>
     </div>
   );
 }

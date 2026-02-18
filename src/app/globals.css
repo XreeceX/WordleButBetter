@@ -270,6 +270,9 @@ body::before {
   backface-visibility: hidden;
   transform-style: preserve-3d;
   outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  contain: layout;
 }
 
 .board-shake-1 { animation: board-shake-1 0.5s ease-out 0.52s both; }
