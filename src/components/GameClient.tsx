@@ -158,20 +158,22 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
       : "";
 
   return (
-    <div
-      key={animatingRow !== null ? `shake-${animatingRow}-${attempts.length}` : "idle"}
-      className={`flex flex-col items-center min-h-0 w-full py-1 gap-[min(0.5rem,1.5vh)] ${boardShakeClass}`}
-    >
-      <GameGrid
-        wordLength={wordLength}
-        maxAttempts={maxAttempts}
-        attempts={attempts}
-        evaluations={evaluations}
-        currentGuess={currentGuess}
-        currentRow={currentRow}
-        animatingRow={animatingRow}
-        shakeRow={shakeRow}
-      />
+    <div className="flex flex-col items-center min-h-0 w-full py-1 gap-[min(0.5rem,1.5vh)]">
+      <div
+        key={animatingRow !== null ? `shake-${animatingRow}-${attempts.length}` : "idle"}
+        className={`w-full flex justify-center overflow-x-hidden ${boardShakeClass}`}
+      >
+        <GameGrid
+          wordLength={wordLength}
+          maxAttempts={maxAttempts}
+          attempts={attempts}
+          evaluations={evaluations}
+          currentGuess={currentGuess}
+          currentRow={currentRow}
+          animatingRow={animatingRow}
+          shakeRow={shakeRow}
+        />
+      </div>
 
       {powerHintText && (
         <p className="shrink-0 px-3 py-2 rounded-xl bg-violet-500/10 border border-violet-500/30 text-violet-200 text-sm italic max-w-md animate-pop">
