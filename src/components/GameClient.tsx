@@ -61,7 +61,7 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
           setCurrentGuess("");
           setState(result.state);
           // Clear animating state after stagger + flip duration (~900ms for 6 tiles)
-          const delay = 700 + wordLength * 70;
+          const delay = 700;
           setTimeout(() => setAnimatingRow(null), delay);
         });
         return;
@@ -141,8 +141,18 @@ export function GameClient({ initialState, hasUnsolvedWordsLeft: initialHasMore 
 
   const keyStatus = getKeyStatusFromEvaluations(attempts, evaluations);
 
+  const animatingEvaluation = animatingRow !== null && evaluations[animatingRow] ? evaluations[animatingRow] : [];
+  const correctCountInAnimatingRow = animatingEvaluation.filter((s) => s === "correct").length;
+  const boardShakeClass =
+    animatingRow !== null && correctCountInAnimatingRow > 0
+      ? `board-shake-${Math.min(correctCountInAnimatingRow, 7)}`
+      : "";
+
   return (
-    <div className="flex flex-col items-center min-h-0 w-full py-1 gap-[min(0.5rem,1.5vh)]">
+    <div
+      key={animatingRow !== null ? `shake-${animatingRow}-${attempts.length}` : "idle"}
+      className={`flex flex-col items-center min-h-0 w-full py-1 gap-[min(0.5rem,1.5vh)] ${boardShakeClass}`}
+    >
       <GameGrid
         wordLength={wordLength}
         maxAttempts={maxAttempts}

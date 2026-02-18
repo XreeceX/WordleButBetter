@@ -181,20 +181,21 @@ body::before {
   animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
+/* No delay: all letters in the row flip at once (no stagger) */
 .animate-flip-in-card.stagger-0,
-.animate-flip-in-card-correct.stagger-0 { animation-delay: 0ms; }
+.animate-flip-in-card-correct.stagger-0,
 .animate-flip-in-card.stagger-1,
-.animate-flip-in-card-correct.stagger-1 { animation-delay: 70ms; }
+.animate-flip-in-card-correct.stagger-1,
 .animate-flip-in-card.stagger-2,
-.animate-flip-in-card-correct.stagger-2 { animation-delay: 140ms; }
+.animate-flip-in-card-correct.stagger-2,
 .animate-flip-in-card.stagger-3,
-.animate-flip-in-card-correct.stagger-3 { animation-delay: 210ms; }
+.animate-flip-in-card-correct.stagger-3,
 .animate-flip-in-card.stagger-4,
-.animate-flip-in-card-correct.stagger-4 { animation-delay: 280ms; }
+.animate-flip-in-card-correct.stagger-4,
 .animate-flip-in-card.stagger-5,
-.animate-flip-in-card-correct.stagger-5 { animation-delay: 350ms; }
+.animate-flip-in-card-correct.stagger-5,
 .animate-flip-in-card.stagger-6,
-.animate-flip-in-card-correct.stagger-6 { animation-delay: 420ms; }
+.animate-flip-in-card-correct.stagger-6 { animation-delay: 0ms; }
 
 /* Board shake intensity: more correct letters = stronger vibration */
 @keyframes board-shake-1 {

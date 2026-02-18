@@ -26,17 +26,9 @@ export function GameGrid({
   const rows = maxAttempts;
   const cols = wordLength;
 
-  const animatingEvaluation = animatingRow !== null && evaluations[animatingRow] ? evaluations[animatingRow] : [];
-  const correctCountInAnimatingRow = animatingEvaluation.filter((s) => s === "correct").length;
-  const boardShakeClass =
-    animatingRow !== null && correctCountInAnimatingRow > 0
-      ? `board-shake-${Math.min(correctCountInAnimatingRow, 7)}`
-      : "";
-
   return (
     <div
-      key={animatingRow !== null ? `animate-${animatingRow}-${attempts.length}` : "idle"}
-      className={`flex flex-col mx-auto w-full max-w-xl shrink-0 ${boardShakeClass}`}
+      className="flex flex-col mx-auto w-full max-w-xl shrink-0"
       style={{ perspective: "1200px", gap: "min(0.4rem, 1.2vh)" }}
     >
       {Array.from({ length: rows }).map((_, rowIndex) => (
