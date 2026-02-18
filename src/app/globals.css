@@ -76,6 +76,19 @@ body {
   }
 }
 
+/* Hide scrollbar so it doesn't flash during shake; scrolling still works (wheel/touch) */
+.app-shell,
+.app-shell > div,
+.app-shell main {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.app-shell::-webkit-scrollbar,
+.app-shell > div::-webkit-scrollbar,
+.app-shell main::-webkit-scrollbar {
+  display: none;
+}
+
 .app-shell {
   /* Portrait: fixed viewport height, inner scroll */
 }
